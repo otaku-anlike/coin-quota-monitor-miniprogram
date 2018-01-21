@@ -1,0 +1,47 @@
+
+server:
+  port: 443
+  http:
+    port: 80
+  ssl:
+    enabled: true
+    key-store: /root/release/config/www.natiac.cn.jks
+    key-store-password: 9034ob44yf
+    keyStoreType: JKS
+    keyAlias: www.natiac.cn
+
+spring:
+  application:
+    name: admin-managee
+  datasource:
+#    url: jdbc:mysql://sh-cdb-hcelu8yx.sql.tencentcdb.com:63507/coin?useUnicode=true&amp;characterEncoding=UTF-8
+    url: jdbc:mysql://172.17.0.17:3306/coin?useUnicode=true&amp;characterEncoding=UTF-8
+    username: root
+    password: BBBBBDJJNii21z
+    driver_class_name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    #指定连接池中最大的活跃连接数.
+    max-active: 20
+    initial-size: 1
+    #指定必须保持连接的最小值
+    min-idle: 3
+    #指定连接池等待连接返回的最大等待时间，毫秒单位.
+    max-wait: 60000
+    #空闲连接回收的时间间隔，与test-while-idle一起使用，设置5分钟
+    time-between-eviction-runs-millis: 60000
+    #连接池空闲连接的有效时间 ，设置30分钟
+    min-evictable-idle-time-millis: 300000
+    #验证连接的有效性
+    test-while-idle: true
+    #获取连接时候验证，会影响性能
+    test-on-borrow: false
+    #在连接归还到连接池时是否测试该连接
+    test-on-return: false
+    poolPreparedStatements: true
+
+#日志
+#logging:
+#  config: /home/coin/config/logback-hundraku.xml
+
+debug: true
