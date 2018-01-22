@@ -16,7 +16,7 @@
 	</commentGenerator>
 
 	<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-		connectionURL="jdbc:mysql://sh-cdb-hcelu8yx.sql.tencentcdb.com:63507/coin" userId="root"
+		connectionURL="jdbc:mysql://sh-cdb-hcelu8yx.sql.tencentcdb.com:63507/quota" userId="root"
 		password="BBBBBDJJNii21z">
 	</jdbcConnection>
 
@@ -50,8 +50,12 @@
 		targetProject="${entity.target.dir}">
 		<property name="enableSubPackages" value="true" />
 	</javaClientGenerator>
-	<table tableName="menu" ></table>
-	<table tableName="user" ></table>
+
+	<table tableName="user" domainObjectName="User"></table>
+	<table tableName="macd_cross" ></table>
+	<table tableName="macd_cross_history"></table>
+	<table tableName="schedule" ></table>
+	<table tableName="symbols" ></table>
 	
 	
 <!-- 

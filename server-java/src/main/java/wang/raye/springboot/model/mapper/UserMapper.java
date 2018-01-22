@@ -55,9 +55,9 @@ public interface UserMapper {
      */
     @Insert({
         "insert into user (id, username, ",
-        "psw)",
+        "password)",
         "values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, ",
-        "#{psw,jdbcType=VARCHAR})"
+        "#{password,jdbcType=VARCHAR})"
     })
     int insert(User record);
 
@@ -80,7 +80,7 @@ public interface UserMapper {
     @Results({
         @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
         @Result(column="username", property="username", jdbcType=JdbcType.VARCHAR),
-        @Result(column="psw", property="psw", jdbcType=JdbcType.VARCHAR)
+        @Result(column="password", property="password", jdbcType=JdbcType.VARCHAR)
     })
     List<User> selectByExample(UserCriteria example);
 
@@ -92,14 +92,14 @@ public interface UserMapper {
      */
     @Select({
         "select",
-        "id, username, psw",
+        "id, username, password",
         "from user",
         "where id = #{id,jdbcType=INTEGER}"
     })
     @Results({
         @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
         @Result(column="username", property="username", jdbcType=JdbcType.VARCHAR),
-        @Result(column="psw", property="psw", jdbcType=JdbcType.VARCHAR)
+        @Result(column="password", property="password", jdbcType=JdbcType.VARCHAR)
     })
     User selectByPrimaryKey(Integer id);
 
@@ -139,7 +139,7 @@ public interface UserMapper {
     @Update({
         "update user",
         "set username = #{username,jdbcType=VARCHAR},",
-          "psw = #{psw,jdbcType=VARCHAR}",
+          "password = #{password,jdbcType=VARCHAR}",
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(User record);

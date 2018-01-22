@@ -5,7 +5,7 @@ spring:
   application:
     name: admin-managee
   datasource:
-    url: jdbc:mysql://sh-cdb-hcelu8yx.sql.tencentcdb.com:63507/coin?useUnicode=true&amp;characterEncoding=UTF-8
+    url: jdbc:mysql://sh-cdb-hcelu8yx.sql.tencentcdb.com:63507/quota?useUnicode=true&amp;characterEncoding=UTF-8
 #    url: jdbc:mysql://172.17.0.17:3306/coin?useUnicode=true&amp;characterEncoding=UTF-8
     username: root
     password: BBBBBDJJNii21z

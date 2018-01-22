@@ -16,7 +16,7 @@
 	</commentGenerator>
 
 	<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-		connectionURL="jdbc:mysql://172.17.0.17:3306/coin" userId="root"
+		connectionURL="jdbc:mysql://172.17.0.17:3306/quota" userId="root"
 		password="BBBBBDJJNii21z">
 	</jdbcConnection>
 

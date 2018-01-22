@@ -29,7 +29,7 @@ public class UserController {
 	
 	@ApiImplicitParams({
 		@ApiImplicitParam(name="username",paramType="query",dataType="string"),
-		@ApiImplicitParam(name="psw",paramType="query",dataType="string")
+		@ApiImplicitParam(name="password",paramType="query",dataType="string")
 	})
 	public String add(User user){
 		return "hello "+server.add(user);
