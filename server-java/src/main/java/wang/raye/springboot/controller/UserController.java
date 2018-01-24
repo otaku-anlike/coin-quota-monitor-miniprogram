@@ -1,5 +1,6 @@
 package wang.raye.springboot.controller;
 
+import com.binance.api.client.domain.market.TickerPrice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import wang.raye.springboot.model.User;
 import wang.raye.springboot.server.UserServer;
+
+import java.util.List;
 
 @Api(value="用户相关的接口")
 @RestController
@@ -42,7 +45,8 @@ public class UserController {
 	 */
 	@RequestMapping("/all")
 	@ApiOperation(notes="查询所有用户",value="查询所有有，目前只返回数量",httpMethod="GET")
-	public String find(){
-		return ""+server.findAll().size();
+	public List<TickerPrice> find(){
+//		return ""+server.findAll().size();
+		return server.findAll();
 	}
 }

@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=binance-api-client-1.0.7.jar  -DgroupId=com.binance.api -DartifactId=binance-api-client -Dversion=1.0.7 -Dpackaging=jar

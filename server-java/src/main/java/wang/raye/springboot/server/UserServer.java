@@ -2,6 +2,7 @@ package wang.raye.springboot.server;
 
 import java.util.List;
 
+import com.binance.api.client.domain.market.TickerPrice;
 import wang.raye.springboot.model.User;
 
 /**
@@ -21,5 +22,5 @@ public interface UserServer {
 	 * 查询所有用户
 	 * @return
 	 */
-	public List<User> findAll();
+	public List<TickerPrice> findAll();
 }

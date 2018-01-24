@@ -1,2 +1,0 @@
-#https解决方案升级nss
-sudo yum upgrade nss

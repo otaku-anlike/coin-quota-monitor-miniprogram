@@ -3,10 +3,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>wang.raye</groupId>
 	<artifactId>springboot</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>springboot Maven Webapp</name>
 	<url>http://maven.apache.org</url>
+	<!--<repositories>-->
+		<!--<repository>-->
+			<!--<id>jitpack.io</id>-->
+			<!--<url>https://jitpack.io</url>-->
+		<!--</repository>-->
+	<!--</repositories>-->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -17,6 +23,7 @@
 		<entity.target.dir>src/main/java/</entity.target.dir>
 		<dao.resources.dir>src/main/resources/</dao.resources.dir>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -107,6 +114,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.binance.api</groupId>
+			<artifactId>binance-api-client</artifactId>
+			<version>1.0.7</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>springboot</finalName>
@@ -159,8 +171,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<encoding>UTF-8</encoding>
-					<source>1.5</source>
-					<target>1.5</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 			<plugin>

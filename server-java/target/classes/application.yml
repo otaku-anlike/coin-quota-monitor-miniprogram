@@ -30,9 +30,13 @@ spring:
     #在连接归还到连接池时是否测试该连接
     test-on-return: false
     poolPreparedStatements: true
+  schedule:
+    test: 0/2 * * * * ?
+    test2: 0/3 * * * * ?
 
 #日志
 #logging:
 #  config: /home/coin/config/logback-hundraku.xml
 
 debug: true
+
