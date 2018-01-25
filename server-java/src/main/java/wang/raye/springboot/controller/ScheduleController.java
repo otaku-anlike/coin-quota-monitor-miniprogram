@@ -18,16 +18,18 @@ public class ScheduleController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Scheduled(cron="${spring.schedule.test}")
+//    @Scheduled(cron="${spring.schedule.test}")
     public void getReport() {
         Date date = new Date();
         System.out.println(date);
+        log.info("线程getReport:"+Thread.currentThread().getName()+"运行中.....");
     }
 
-    @Scheduled(cron="${spring.schedule.test2}")
+//    @Scheduled(cron="${spring.schedule.test2}")
     public void getReport2() {
         Date date = new Date();
         System.out.println(new Random());
+        log.info("线程getReport2:"+Thread.currentThread().getName()+"运行中.....");
     }
 
 }

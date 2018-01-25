@@ -13,7 +13,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
 
     #指定连接池中最大的活跃连接数.
-    max-active: 20
+    max-active: 200
     initial-size: 1
     #指定必须保持连接的最小值
     min-idle: 3
@@ -30,13 +30,26 @@ spring:
     #在连接归还到连接池时是否测试该连接
     test-on-return: false
     poolPreparedStatements: true
+
   schedule:
     test: 0/2 * * * * ?
     test2: 0/3 * * * * ?
+    binance:
+      price: 0 0/1 * * * ?
+      macd:
+        1h: 0 0/2 * * * ?
 
 #日志
 #logging:
 #  config: /home/coin/config/logback-hundraku.xml
 
 debug: true
+
+#自定义的全局变量
+self:
+  exchange:
+    binance: binance
+  type:
+    new: NEW
+    macd: MACD
 
