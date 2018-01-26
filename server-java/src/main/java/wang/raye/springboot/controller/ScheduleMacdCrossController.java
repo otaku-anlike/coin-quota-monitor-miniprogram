@@ -23,10 +23,17 @@ public class ScheduleMacdCrossController {
     private MacdCrossServer macdCrossServer;
 
     @Scheduled(cron="${spring.schedule.binance.macd.1h}")
-    public void getCurrentPrice() {
+    public void binanceMacd1h() {
         log.info("线程 binance macd 1h:"+Thread.currentThread().getName()+"运行开始.....");
         macdCrossServer.binanceMacdCross(CandlestickInterval.HOURLY);
         log.info("线程 binance macd 1h:"+Thread.currentThread().getName()+"运行结束.....");
+    }
+
+        @Scheduled(cron="${spring.schedule.binance.macd.4h}")
+    public void binanceMacd4h() {
+        log.info("线程 binance macd 4h:"+Thread.currentThread().getName()+"运行开始.....");
+        macdCrossServer.binanceMacdCross(CandlestickInterval.FOUR_HORLY);
+        log.info("线程 binance macd 4h:"+Thread.currentThread().getName()+"运行结束.....");
     }
 
 

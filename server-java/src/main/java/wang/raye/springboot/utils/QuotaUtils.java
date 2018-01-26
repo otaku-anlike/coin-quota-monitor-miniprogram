@@ -1,6 +1,7 @@
 package wang.raye.springboot.utils;
 
 import com.binance.api.client.domain.market.Candlestick;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import wang.raye.springboot.bean.MacdBean;
 
@@ -12,7 +13,8 @@ import java.util.List;
  * @author Raye
  * @since 2016年10月11日19:29:02
  */
-@Repository
+
+@Component
 public class QuotaUtils {
 
 

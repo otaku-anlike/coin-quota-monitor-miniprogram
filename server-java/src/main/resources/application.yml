@@ -37,7 +37,8 @@ spring:
     binance:
       price: 0 0/1 * * * ?
       macd:
-        1h: 0 0/2 * * * ?
+        1h: 0 0/3 * * * ?
+        4h: 0 0/5 * * * ?
 
 #日志
 #logging:
@@ -52,4 +53,6 @@ self:
   type:
     new: NEW
     macd: MACD
+  sckey: SCU20744Tcae3e700d2845416dcf4b7d48fefd4fc5a68472d8b5e0
+#  sckey: SCU20845T1c32631f004c33e9aa9333b68b2895065a6aa16731cfa
 

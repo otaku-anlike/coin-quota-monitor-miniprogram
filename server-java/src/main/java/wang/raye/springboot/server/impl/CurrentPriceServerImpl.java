@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestOperations;
+import wang.raye.springboot.bean.WxSendBean;
 import wang.raye.springboot.model.Alert;
 import wang.raye.springboot.model.Symbols;
 import wang.raye.springboot.model.SymbolsCriteria;
@@ -20,6 +21,7 @@ import wang.raye.springboot.model.mapper.SymbolsMapper;
 import wang.raye.springboot.model.mapper.UserMapper;
 import wang.raye.springboot.server.CurrentPriceServer;
 import wang.raye.springboot.server.UserServer;
+import wang.raye.springboot.utils.WxSendUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -44,10 +46,15 @@ public class CurrentPriceServerImpl implements CurrentPriceServer {
 	@Autowired
 	private RestOperations restOperations;
 
+	@Autowired
+	private WxSendUtils wxSendUtils;
+
 	@Value("${self.exchange.binance}")
 	private String BINANCE;
 	@Value("${self.type.new}")
 	private String NEW;
+	@Value("${self.sckey}")
+	private String SCKEY;
 
 	public void wxSend(String exchange,String symbol, String price){
 		String url = "https://sc.ftqq.com/SCU20744Tcae3e700d2845416dcf4b7d48fefd4fc5a68472d8b5e0.send?text=={text}&desp={desp}";
@@ -93,7 +100,13 @@ public class CurrentPriceServerImpl implements CurrentPriceServer {
 					alertMapper.insert(alert);
 
 					//发微信
-                    this.wxSend(BINANCE,tickerPrice.getSymbol(),tickerPrice.getPrice());
+					WxSendBean sendBean = new WxSendBean();
+					sendBean.setSckey(SCKEY);
+					sendBean.setExchange(BINANCE);
+					sendBean.setSymbol(tickerPrice.getSymbol());
+					sendBean.setPrice(tickerPrice.getPrice());
+					wxSendUtils.sendNew(sendBean);
+//                    this.wxSend(BINANCE,tickerPrice.getSymbol(),tickerPrice.getPrice());
                     log.info(BINANCE+"上新币["+tickerPrice.getSymbol()+"]");
                     log.info("新币["+tickerPrice.getSymbol()+"]目前价格:"+tickerPrice.getPrice());
 				}

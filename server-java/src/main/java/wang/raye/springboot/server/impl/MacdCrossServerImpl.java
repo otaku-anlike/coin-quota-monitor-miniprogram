@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestOperations;
 import wang.raye.springboot.bean.MacdBean;
+import wang.raye.springboot.bean.WxSendBean;
 import wang.raye.springboot.model.*;
 import wang.raye.springboot.model.mapper.AlertMapper;
 import wang.raye.springboot.model.mapper.MacdCrossHistoryMapper;
@@ -21,6 +22,7 @@ import wang.raye.springboot.model.mapper.SymbolsMapper;
 import wang.raye.springboot.server.CurrentPriceServer;
 import wang.raye.springboot.server.MacdCrossServer;
 import wang.raye.springboot.utils.QuotaUtils;
+import wang.raye.springboot.utils.WxSendUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -47,7 +49,7 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 	private AlertMapper alertMapper;
 
 	@Autowired
-	private RestOperations restOperations;
+	private WxSendUtils wxSendUtils;
 
 	@Autowired
 	private QuotaUtils quotaUtils;
@@ -56,6 +58,8 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 	private String BINANCE;
 	@Value("${self.type.macd}")
 	private String MACD;
+	@Value("${self.sckey}")
+	private String SCKEY;
 
 	@Override
 	public boolean binanceMacdCross(CandlestickInterval period) {
@@ -96,6 +100,7 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 				macdCrossMapper.insert(macdCross);
 			}
 
+			// 金叉或者死叉时
 			if ("2".equals(status) || "4".equals(status)) {
 				MacdCrossHistoryCriteria condMacdCrossHistory = new MacdCrossHistoryCriteria();
 				MacdCrossHistoryCriteria.Criteria criteriaMacdCrossHistory = condMacdCrossHistory.createCriteria();
@@ -103,7 +108,7 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 				criteriaMacdCrossHistory.andSymbolEqualTo(symbol.getSymbol());
 				criteriaMacdCrossHistory.andPeriodEqualTo(period.getIntervalId());
 				criteriaMacdCrossHistory.andTypeEqualTo(MACD);
-				// 交叉状态 金叉或者死叉时
+				// 交叉状态
 				criteriaMacdCrossHistory.andStatusEqualTo(status);
 				List<MacdCrossHistory> macdCrossHistoryExistList = macdCrossHistoryMapper.selectByExample(condMacdCrossHistory);
 				if (macdCrossHistoryExistList.size() > 0) {
@@ -122,10 +127,57 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 					macdCrossHistory.setTime(new Date());
 					macdCrossHistoryMapper.insert(macdCrossHistory);
 				}
+
+				AlertCriteria condAlert = new AlertCriteria();
+				AlertCriteria.Criteria criteriaAlert = condAlert.createCriteria();
+				criteriaAlert.andExchangeEqualTo(BINANCE);
+				criteriaAlert.andSymbolEqualTo(symbol.getSymbol());
+				criteriaAlert.andPeriodEqualTo(period.getIntervalId());
+				criteriaAlert.andTypeEqualTo(MACD);
+				// 交叉状态
+//				criteriaAlert.andStatusEqualTo(status);
+				List<Alert> alertExistList = alertMapper.selectByExample(condAlert);
+				boolean isNeedSend = false;
+				if (alertExistList.size() > 0) {
+					Alert alert = alertExistList.get(0);
+					if (!status.equals(alert.getStatus())) {
+						alert.setPrice(Double.valueOf(candlestickList.get(candlestickList.size()-1).getClose()));
+						alert.setTime(new Date());
+						alert.setStatus(status);
+						alertMapper.updateByPrimaryKey(alert);
+						isNeedSend = true;
+					}
+				} else {
+					Alert alert = new Alert();
+					alert.setExchange(BINANCE);
+					alert.setSymbol(symbol.getSymbol());
+					alert.setType(MACD);
+					alert.setPeriod(period.getIntervalId());
+					alert.setStatus(status);
+					alert.setPrice(Double.valueOf(candlestickList.get(candlestickList.size()-1).getClose()));
+					alert.setTime(new Date());
+					alertMapper.insert(alert);
+					isNeedSend = true;
+				}
+
+				if (isNeedSend) {
+					if (symbol.getSymbol().indexOf("BTC") > 0 && status.equals("2")) {
+						WxSendBean sendBean = new WxSendBean();
+						sendBean.setSckey(SCKEY);
+						sendBean.setExchange(BINANCE);
+						sendBean.setPrice(candlestickList.get(candlestickList.size()-1).getClose());
+						sendBean.setSymbol(symbol.getSymbol());
+						sendBean.setStatus(status);
+						sendBean.setType(MACD);
+						sendBean.setTime(new Date().toString());
+						sendBean.setPeriod(period.getIntervalId());
+						wxSendUtils.sendCross(sendBean);
+					}
+				}
 			}
 
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 			}
 			catch (InterruptedException e) {
 				log.error("线程异常终止...");
