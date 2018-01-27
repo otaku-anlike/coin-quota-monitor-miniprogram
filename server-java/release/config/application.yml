@@ -14,7 +14,7 @@ spring:
   application:
     name: admin-managee
   datasource:
-#    url: jdbc:mysql://sh-cdb-hcelu8yx.sql.tencentcdb.com:63507/coin?useUnicode=true&amp;characterEncoding=UTF-8
+#    url: jdbc:mysql://sh-cdb-hcelu8yx.sql.tencentcdb.com:63507/quota?useUnicode=true&amp;characterEncoding=UTF-8
     url: jdbc:mysql://172.17.0.17:3306/quota?useUnicode=true&amp;characterEncoding=UTF-8
     username: root
     password: BBBBBDJJNii21z
@@ -22,7 +22,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
 
     #指定连接池中最大的活跃连接数.
-    max-active: 20
+    max-active: 200
     initial-size: 1
     #指定必须保持连接的最小值
     min-idle: 3
@@ -40,8 +40,30 @@ spring:
     test-on-return: false
     poolPreparedStatements: true
 
+  schedule:
+    test: 0/2 * * * * ?
+    test2: 0/3 * * * * ?
+    binance:
+      price: 0 0/1 * * * ?
+      macd:
+        1h: 0 0/3 * * * ?
+        4h: 0 0/5 * * * ?
+        1d: 0 0/15 * * * ?
+
 #日志
 logging:
   config: /home/coin/config/logback-hundraku.xml
 
 debug: true
+
+#自定义的全局变量
+self:
+  exchange:
+    binance: binance
+  type:
+    new: NEW
+    macd: MACD
+    kdj: KDJ
+  sckey: SCU20744Tcae3e700d2845416dcf4b7d48fefd4fc5a68472d8b5e0
+#  sckey: SCU20845T1c32631f004c33e9aa9333b68b2895065a6aa16731cfa
+

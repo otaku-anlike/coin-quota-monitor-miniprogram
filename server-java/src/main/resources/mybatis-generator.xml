@@ -51,12 +51,13 @@
 		<property name="enableSubPackages" value="true" />
 	</javaClientGenerator>
 
-	<table tableName="user" domainObjectName="User"></table>
-	<table tableName="macd_cross" ></table>
-	<table tableName="macd_cross_history"></table>
-	<table tableName="schedule" ></table>
-	<table tableName="symbols" ></table>
-	<table tableName="alert" ></table>
+		<table tableName="user" domainObjectName="User"></table>
+		<!--<table tableName="macd_cross" ></table>-->
+		<table tableName="macd_cross_history"></table>
+		<table tableName="schedule" ></table>
+		<table tableName="symbols" ></table>
+		<table tableName="alert" ></table>
+		<table tableName="alert_setting" ></table>
 	
 	
 <!-- 

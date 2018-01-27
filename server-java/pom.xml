@@ -6,6 +6,7 @@
 	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>springboot Maven Webapp</name>
+
 	<url>http://maven.apache.org</url>
 	<repositories>
 		<repository>
@@ -23,6 +24,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<entity.target.dir>src/main/java/</entity.target.dir>
 		<dao.resources.dir>src/main/resources/</dao.resources.dir>
+		<skipTests>true</skipTests>
 	</properties>
 
 	<dependencies>
@@ -33,11 +35,11 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- Springboot -->
-		<!--<dependency>-->
-			<!--<groupId>org.springframework.boot</groupId>-->
-			<!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
-			<!--<scope>provided</scope>-->
-		<!--</dependency>-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
@@ -130,6 +132,14 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- 自动生成setter/getter插件 -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.10</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>springboot</finalName>
@@ -184,11 +194,15 @@
 					<encoding>UTF-8</encoding>
 					<source>1.8</source>
 					<target>1.8</target>
+
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>wang.raye.springboot.ApiApplication</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
 

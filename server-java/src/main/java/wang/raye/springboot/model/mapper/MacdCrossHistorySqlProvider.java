@@ -66,6 +66,18 @@ public class MacdCrossHistorySqlProvider {
             sql.VALUES("status", "#{status,jdbcType=CHAR}");
         }
         
+        if (record.getQuota1() != null) {
+            sql.VALUES("quota1", "#{quota1,jdbcType=DOUBLE}");
+        }
+        
+        if (record.getQuota2() != null) {
+            sql.VALUES("quota2", "#{quota2,jdbcType=DOUBLE}");
+        }
+        
+        if (record.getQuota3() != null) {
+            sql.VALUES("quota3", "#{quota3,jdbcType=DOUBLE}");
+        }
+        
         if (record.getPrice() != null) {
             sql.VALUES("price", "#{price,jdbcType=DOUBLE}");
         }
@@ -98,6 +110,9 @@ public class MacdCrossHistorySqlProvider {
         sql.SELECT("symbol");
         sql.SELECT("type");
         sql.SELECT("status");
+        sql.SELECT("quota1");
+        sql.SELECT("quota2");
+        sql.SELECT("quota3");
         sql.SELECT("price");
         sql.SELECT("period");
         sql.SELECT("time");
@@ -144,6 +159,18 @@ public class MacdCrossHistorySqlProvider {
             sql.SET("status = #{record.status,jdbcType=CHAR}");
         }
         
+        if (record.getQuota1() != null) {
+            sql.SET("quota1 = #{record.quota1,jdbcType=DOUBLE}");
+        }
+        
+        if (record.getQuota2() != null) {
+            sql.SET("quota2 = #{record.quota2,jdbcType=DOUBLE}");
+        }
+        
+        if (record.getQuota3() != null) {
+            sql.SET("quota3 = #{record.quota3,jdbcType=DOUBLE}");
+        }
+        
         if (record.getPrice() != null) {
             sql.SET("price = #{record.price,jdbcType=DOUBLE}");
         }
@@ -175,6 +202,9 @@ public class MacdCrossHistorySqlProvider {
         sql.SET("symbol = #{record.symbol,jdbcType=VARCHAR}");
         sql.SET("type = #{record.type,jdbcType=VARCHAR}");
         sql.SET("status = #{record.status,jdbcType=CHAR}");
+        sql.SET("quota1 = #{record.quota1,jdbcType=DOUBLE}");
+        sql.SET("quota2 = #{record.quota2,jdbcType=DOUBLE}");
+        sql.SET("quota3 = #{record.quota3,jdbcType=DOUBLE}");
         sql.SET("price = #{record.price,jdbcType=DOUBLE}");
         sql.SET("period = #{record.period,jdbcType=VARCHAR}");
         sql.SET("time = #{record.time,jdbcType=TIMESTAMP}");
@@ -208,6 +238,18 @@ public class MacdCrossHistorySqlProvider {
         
         if (record.getStatus() != null) {
             sql.SET("status = #{status,jdbcType=CHAR}");
+        }
+        
+        if (record.getQuota1() != null) {
+            sql.SET("quota1 = #{quota1,jdbcType=DOUBLE}");
+        }
+        
+        if (record.getQuota2() != null) {
+            sql.SET("quota2 = #{quota2,jdbcType=DOUBLE}");
+        }
+        
+        if (record.getQuota3() != null) {
+            sql.SET("quota3 = #{quota3,jdbcType=DOUBLE}");
         }
         
         if (record.getPrice() != null) {

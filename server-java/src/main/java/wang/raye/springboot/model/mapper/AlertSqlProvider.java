@@ -74,6 +74,10 @@ public class AlertSqlProvider {
             sql.VALUES("period", "#{period,jdbcType=VARCHAR}");
         }
         
+        if (record.getCount() != null) {
+            sql.VALUES("count", "#{count,jdbcType=INTEGER}");
+        }
+        
         if (record.getTime() != null) {
             sql.VALUES("time", "#{time,jdbcType=TIMESTAMP}");
         }
@@ -100,6 +104,7 @@ public class AlertSqlProvider {
         sql.SELECT("status");
         sql.SELECT("price");
         sql.SELECT("period");
+        sql.SELECT("count");
         sql.SELECT("time");
         sql.FROM("alert");
         applyWhere(sql, example, false);
@@ -152,6 +157,10 @@ public class AlertSqlProvider {
             sql.SET("period = #{record.period,jdbcType=VARCHAR}");
         }
         
+        if (record.getCount() != null) {
+            sql.SET("count = #{record.count,jdbcType=INTEGER}");
+        }
+        
         if (record.getTime() != null) {
             sql.SET("time = #{record.time,jdbcType=TIMESTAMP}");
         }
@@ -177,6 +186,7 @@ public class AlertSqlProvider {
         sql.SET("status = #{record.status,jdbcType=CHAR}");
         sql.SET("price = #{record.price,jdbcType=DOUBLE}");
         sql.SET("period = #{record.period,jdbcType=VARCHAR}");
+        sql.SET("count = #{record.count,jdbcType=INTEGER}");
         sql.SET("time = #{record.time,jdbcType=TIMESTAMP}");
         
         AlertCriteria example = (AlertCriteria) parameter.get("example");
@@ -216,6 +226,10 @@ public class AlertSqlProvider {
         
         if (record.getPeriod() != null) {
             sql.SET("period = #{period,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getCount() != null) {
+            sql.SET("count = #{count,jdbcType=INTEGER}");
         }
         
         if (record.getTime() != null) {

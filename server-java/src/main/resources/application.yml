@@ -6,7 +6,7 @@ spring:
     name: admin-managee
   datasource:
     url: jdbc:mysql://sh-cdb-hcelu8yx.sql.tencentcdb.com:63507/quota?useUnicode=true&amp;characterEncoding=UTF-8
-#    url: jdbc:mysql://172.17.0.17:3306/coin?useUnicode=true&amp;characterEncoding=UTF-8
+#    url: jdbc:mysql://172.17.0.17:3306/quota?useUnicode=true&amp;characterEncoding=UTF-8
     username: root
     password: BBBBBDJJNii21z
     driver_class_name: com.mysql.jdbc.Driver
@@ -39,6 +39,7 @@ spring:
       macd:
         1h: 0 0/3 * * * ?
         4h: 0 0/5 * * * ?
+        1d: 0 0/15 * * * ?
 
 #日志
 #logging:
@@ -53,6 +54,7 @@ self:
   type:
     new: NEW
     macd: MACD
+    kdj: KDJ
   sckey: SCU20744Tcae3e700d2845416dcf4b7d48fefd4fc5a68472d8b5e0
 #  sckey: SCU20845T1c32631f004c33e9aa9333b68b2895065a6aa16731cfa
 

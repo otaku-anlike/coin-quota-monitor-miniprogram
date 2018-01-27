@@ -56,10 +56,12 @@ public interface AlertMapper {
     @Insert({
         "insert into alert (id, exchange, ",
         "symbol, type, status, ",
-        "price, period, time)",
+        "price, period, count, ",
+        "time)",
         "values (#{id,jdbcType=INTEGER}, #{exchange,jdbcType=VARCHAR}, ",
         "#{symbol,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, ",
-        "#{price,jdbcType=DOUBLE}, #{period,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP})"
+        "#{price,jdbcType=DOUBLE}, #{period,jdbcType=VARCHAR}, #{count,jdbcType=INTEGER}, ",
+        "#{time,jdbcType=TIMESTAMP})"
     })
     int insert(Alert record);
 
@@ -87,6 +89,7 @@ public interface AlertMapper {
         @Result(column="status", property="status", jdbcType=JdbcType.CHAR),
         @Result(column="price", property="price", jdbcType=JdbcType.DOUBLE),
         @Result(column="period", property="period", jdbcType=JdbcType.VARCHAR),
+        @Result(column="count", property="count", jdbcType=JdbcType.INTEGER),
         @Result(column="time", property="time", jdbcType=JdbcType.TIMESTAMP)
     })
     List<Alert> selectByExample(AlertCriteria example);
@@ -99,7 +102,7 @@ public interface AlertMapper {
      */
     @Select({
         "select",
-        "id, exchange, symbol, type, status, price, period, time",
+        "id, exchange, symbol, type, status, price, period, count, time",
         "from alert",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -111,6 +114,7 @@ public interface AlertMapper {
         @Result(column="status", property="status", jdbcType=JdbcType.CHAR),
         @Result(column="price", property="price", jdbcType=JdbcType.DOUBLE),
         @Result(column="period", property="period", jdbcType=JdbcType.VARCHAR),
+        @Result(column="count", property="count", jdbcType=JdbcType.INTEGER),
         @Result(column="time", property="time", jdbcType=JdbcType.TIMESTAMP)
     })
     Alert selectByPrimaryKey(Integer id);
@@ -156,6 +160,7 @@ public interface AlertMapper {
           "status = #{status,jdbcType=CHAR},",
           "price = #{price,jdbcType=DOUBLE},",
           "period = #{period,jdbcType=VARCHAR},",
+          "count = #{count,jdbcType=INTEGER},",
           "time = #{time,jdbcType=TIMESTAMP}",
         "where id = #{id,jdbcType=INTEGER}"
     })

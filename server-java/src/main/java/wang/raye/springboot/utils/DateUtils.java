@@ -11,6 +11,7 @@ import java.util.Date;
 @Component
 public final class DateUtils {
     private static String defaultDatePattern = "yyyy-MM-dd HH:mm:ss";
+    private static String defaultDateShortPattern = "MM-dd HH:mm";
 
     public DateUtils() {
     }
@@ -19,13 +20,26 @@ public final class DateUtils {
         return defaultDatePattern;
     }
 
+    public static String getDateShortPattern() {
+        return defaultDateShortPattern;
+    }
+
     public static String getToday() {
         Date today = new Date();
         return format(today);
     }
 
+    public static String getTodayShort() {
+        Date today = new Date();
+        return formatShortTime(today);
+    }
+
     public static String format(Date date) {
         return date == null ? " " : format(date, getDatePattern());
+    }
+
+    public static String formatShortTime(Date date) {
+        return date == null ? " " : format(date, getDateShortPattern());
     }
 
     public static String format(Date date, String pattern) {

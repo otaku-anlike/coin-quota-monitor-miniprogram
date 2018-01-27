@@ -1,32 +1,22 @@
 package wang.raye.springboot.bean;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode
 public class MacdBean {
 
+    /** 差离率（DIF） */
     private double dif;
+    /** 九日DIF平滑移动平均值 */
     private double dea;
-    private double macd;
+    /** 柱状线（BAR） */
+    private double bar;
 
-    public double getDif() {
-        return dif;
-    }
 
-    public void setDif(double dif) {
-        this.dif = dif;
-    }
-
-    public double getDea() {
-        return dea;
-    }
-
-    public void setDea(double dea) {
-        this.dea = dea;
-    }
-
-    public double getMacd() {
-        return macd;
-    }
-
-    public void setMacd(double macd) {
-        this.macd = macd;
-    }
 }

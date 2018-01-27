@@ -535,6 +535,186 @@ public class MacdCrossHistoryCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andQuota1IsNull() {
+            addCriterion("quota1 is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota1IsNotNull() {
+            addCriterion("quota1 is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota1EqualTo(Double value) {
+            addCriterion("quota1 =", value, "quota1");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota1NotEqualTo(Double value) {
+            addCriterion("quota1 <>", value, "quota1");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota1GreaterThan(Double value) {
+            addCriterion("quota1 >", value, "quota1");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota1GreaterThanOrEqualTo(Double value) {
+            addCriterion("quota1 >=", value, "quota1");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota1LessThan(Double value) {
+            addCriterion("quota1 <", value, "quota1");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota1LessThanOrEqualTo(Double value) {
+            addCriterion("quota1 <=", value, "quota1");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota1In(List<Double> values) {
+            addCriterion("quota1 in", values, "quota1");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota1NotIn(List<Double> values) {
+            addCriterion("quota1 not in", values, "quota1");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota1Between(Double value1, Double value2) {
+            addCriterion("quota1 between", value1, value2, "quota1");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota1NotBetween(Double value1, Double value2) {
+            addCriterion("quota1 not between", value1, value2, "quota1");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota2IsNull() {
+            addCriterion("quota2 is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota2IsNotNull() {
+            addCriterion("quota2 is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota2EqualTo(Double value) {
+            addCriterion("quota2 =", value, "quota2");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota2NotEqualTo(Double value) {
+            addCriterion("quota2 <>", value, "quota2");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota2GreaterThan(Double value) {
+            addCriterion("quota2 >", value, "quota2");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota2GreaterThanOrEqualTo(Double value) {
+            addCriterion("quota2 >=", value, "quota2");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota2LessThan(Double value) {
+            addCriterion("quota2 <", value, "quota2");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota2LessThanOrEqualTo(Double value) {
+            addCriterion("quota2 <=", value, "quota2");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota2In(List<Double> values) {
+            addCriterion("quota2 in", values, "quota2");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota2NotIn(List<Double> values) {
+            addCriterion("quota2 not in", values, "quota2");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota2Between(Double value1, Double value2) {
+            addCriterion("quota2 between", value1, value2, "quota2");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota2NotBetween(Double value1, Double value2) {
+            addCriterion("quota2 not between", value1, value2, "quota2");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota3IsNull() {
+            addCriterion("quota3 is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota3IsNotNull() {
+            addCriterion("quota3 is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota3EqualTo(Double value) {
+            addCriterion("quota3 =", value, "quota3");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota3NotEqualTo(Double value) {
+            addCriterion("quota3 <>", value, "quota3");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota3GreaterThan(Double value) {
+            addCriterion("quota3 >", value, "quota3");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota3GreaterThanOrEqualTo(Double value) {
+            addCriterion("quota3 >=", value, "quota3");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota3LessThan(Double value) {
+            addCriterion("quota3 <", value, "quota3");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota3LessThanOrEqualTo(Double value) {
+            addCriterion("quota3 <=", value, "quota3");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota3In(List<Double> values) {
+            addCriterion("quota3 in", values, "quota3");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota3NotIn(List<Double> values) {
+            addCriterion("quota3 not in", values, "quota3");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota3Between(Double value1, Double value2) {
+            addCriterion("quota3 between", value1, value2, "quota3");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuota3NotBetween(Double value1, Double value2) {
+            addCriterion("quota3 not between", value1, value2, "quota3");
+            return (Criteria) this;
+        }
+
         public Criteria andPriceIsNull() {
             addCriterion("price is null");
             return (Criteria) this;

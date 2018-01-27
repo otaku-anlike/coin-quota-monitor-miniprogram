@@ -29,11 +29,18 @@ public class ScheduleMacdCrossController {
         log.info("线程 binance macd 1h:"+Thread.currentThread().getName()+"运行结束.....");
     }
 
-        @Scheduled(cron="${spring.schedule.binance.macd.4h}")
+    @Scheduled(cron="${spring.schedule.binance.macd.4h}")
     public void binanceMacd4h() {
         log.info("线程 binance macd 4h:"+Thread.currentThread().getName()+"运行开始.....");
         macdCrossServer.binanceMacdCross(CandlestickInterval.FOUR_HORLY);
         log.info("线程 binance macd 4h:"+Thread.currentThread().getName()+"运行结束.....");
+    }
+
+    @Scheduled(cron="${spring.schedule.binance.macd.1d}")
+    public void binanceMacd1d() {
+        log.info("线程 binance macd 1d:"+Thread.currentThread().getName()+"运行开始.....");
+        macdCrossServer.binanceMacdCross(CandlestickInterval.DAILY);
+        log.info("线程 binance macd 1d:"+Thread.currentThread().getName()+"运行结束.....");
     }
 
 

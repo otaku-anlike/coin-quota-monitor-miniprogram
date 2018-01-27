@@ -25,7 +25,7 @@ public class WxSendTests {
 		WxSendBean sendBean = new WxSendBean();
 		sendBean.setSckey("SCU20744Tcae3e700d2845416dcf4b7d48fefd4fc5a68472d8b5e0");
 		sendBean.setExchange("binance");
-		sendBean.setPrice("0.00678");
+		sendBean.setPrice("0.00679");
 		sendBean.setSymbol("BNBBTC");
 		sendBean.setStatus("2");
 		sendBean.setType("MACD");

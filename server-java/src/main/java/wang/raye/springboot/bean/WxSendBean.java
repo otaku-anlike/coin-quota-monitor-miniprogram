@@ -1,5 +1,16 @@
 package wang.raye.springboot.bean;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.List;
+
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode
 public class WxSendBean {
 
     /** Server酱的SCKEY*/
@@ -18,68 +29,8 @@ public class WxSendBean {
     private String status;
     /** 交叉时间*/
     private String time;
+    /** 各种指标*/
+    private List<WxSendQuotaBean> quotaList;
 
-    public String getSckey() {
-        return sckey;
-    }
 
-    public void setSckey(String sckey) {
-        this.sckey = sckey;
-    }
-
-    public String getExchange() {
-        return exchange;
-    }
-
-    public void setExchange(String exchange) {
-        this.exchange = exchange;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(String period) {
-        this.period = period;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
 }

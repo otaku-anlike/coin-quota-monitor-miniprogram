@@ -56,9 +56,11 @@ public interface MacdCrossMapper {
     @Insert({
         "insert into macd_cross (id, exchange, ",
         "symbol, type, status, ",
+        "quota1, quota2, quota3, ",
         "price, period, time)",
         "values (#{id,jdbcType=INTEGER}, #{exchange,jdbcType=VARCHAR}, ",
         "#{symbol,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, ",
+        "#{quota1,jdbcType=DOUBLE}, #{quota2,jdbcType=DOUBLE}, #{quota3,jdbcType=DOUBLE}, ",
         "#{price,jdbcType=DOUBLE}, #{period,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP})"
     })
     int insert(MacdCross record);
@@ -85,6 +87,9 @@ public interface MacdCrossMapper {
         @Result(column="symbol", property="symbol", jdbcType=JdbcType.VARCHAR),
         @Result(column="type", property="type", jdbcType=JdbcType.VARCHAR),
         @Result(column="status", property="status", jdbcType=JdbcType.CHAR),
+        @Result(column="quota1", property="quota1", jdbcType=JdbcType.DOUBLE),
+        @Result(column="quota2", property="quota2", jdbcType=JdbcType.DOUBLE),
+        @Result(column="quota3", property="quota3", jdbcType=JdbcType.DOUBLE),
         @Result(column="price", property="price", jdbcType=JdbcType.DOUBLE),
         @Result(column="period", property="period", jdbcType=JdbcType.VARCHAR),
         @Result(column="time", property="time", jdbcType=JdbcType.TIMESTAMP)
@@ -99,7 +104,7 @@ public interface MacdCrossMapper {
      */
     @Select({
         "select",
-        "id, exchange, symbol, type, status, price, period, time",
+        "id, exchange, symbol, type, status, quota1, quota2, quota3, price, period, time",
         "from macd_cross",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -109,6 +114,9 @@ public interface MacdCrossMapper {
         @Result(column="symbol", property="symbol", jdbcType=JdbcType.VARCHAR),
         @Result(column="type", property="type", jdbcType=JdbcType.VARCHAR),
         @Result(column="status", property="status", jdbcType=JdbcType.CHAR),
+        @Result(column="quota1", property="quota1", jdbcType=JdbcType.DOUBLE),
+        @Result(column="quota2", property="quota2", jdbcType=JdbcType.DOUBLE),
+        @Result(column="quota3", property="quota3", jdbcType=JdbcType.DOUBLE),
         @Result(column="price", property="price", jdbcType=JdbcType.DOUBLE),
         @Result(column="period", property="period", jdbcType=JdbcType.VARCHAR),
         @Result(column="time", property="time", jdbcType=JdbcType.TIMESTAMP)
@@ -154,6 +162,9 @@ public interface MacdCrossMapper {
           "symbol = #{symbol,jdbcType=VARCHAR},",
           "type = #{type,jdbcType=VARCHAR},",
           "status = #{status,jdbcType=CHAR},",
+          "quota1 = #{quota1,jdbcType=DOUBLE},",
+          "quota2 = #{quota2,jdbcType=DOUBLE},",
+          "quota3 = #{quota3,jdbcType=DOUBLE},",
           "price = #{price,jdbcType=DOUBLE},",
           "period = #{period,jdbcType=VARCHAR},",
           "time = #{time,jdbcType=TIMESTAMP}",
