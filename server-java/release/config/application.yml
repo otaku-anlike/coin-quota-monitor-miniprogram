@@ -5,8 +5,8 @@ server:
     port: 80
   ssl:
     enabled: true
-    key-store: /root/release/config/www.natiac.cn.jks
-    key-store-password: 9034ob44yf
+    key-store: /home/coin/config/www.natiac.cn.jks
+    key-store-password: q8iqstjqf4
     keyStoreType: JKS
     keyAlias: www.natiac.cn
 

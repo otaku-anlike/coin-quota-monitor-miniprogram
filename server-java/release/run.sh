@@ -21,8 +21,8 @@ case "$1" in
 				SPRING_PROFILES_ACTIVE=$2
 			fi
 			echo "spring.profiles.active=${SPRING_PROFILES_ACTIVE}"
-			# exec nohup ${JRE_HOME}/bin/java -Xms128m -Xmx512m -jar ${SERVICE_DIR}/${SERVICE_NAME}\.jar --spring.profiles.active=${SPRING_PROFILES_ACTIVE} >/dev/null 2>&1 &
-			exec nohup java -Xms512m -Xmx1024m -jar ${SERVICE_DIR}/${SERVICE_NAME}\.jar >/dev/null 2>&1 &
+			exec nohup ${JRE_HOME}/bin/java -Xms128m -Xmx512m -jar ${SERVICE_DIR}/${SERVICE_NAME}\.jar --spring.profiles.active=${SPRING_PROFILES_ACTIVE} >/dev/null 2>&1 &
+			# exec nohup java -Xms512m -Xmx1024m -jar ${SERVICE_DIR}/${SERVICE_NAME}\.jar >/dev/null 2>&1 &
 			echo "start success"
 		else
 			echo "${SERVICE_NAME} is start"

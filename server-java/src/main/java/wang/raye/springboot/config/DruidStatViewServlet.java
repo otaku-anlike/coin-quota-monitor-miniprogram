@@ -13,9 +13,9 @@ import com.alibaba.druid.support.http.StatViewServlet;
 @SuppressWarnings("serial")
 @WebServlet(urlPatterns = "/druid/*", 
 initParams={
-        @WebInitParam(name="allow",value="127.0.0.1,192.168.1.126"),// IP白名单 (没有配置或者为空，则允许所有访问)
-        @WebInitParam(name="loginUsername",value="Raye"),// 用户名
-        @WebInitParam(name="loginPassword",value="123456"),// 密码
+        @WebInitParam(name="allow",value="127.0.0.1,115.159.187.110,172.17.0.9,183.207.95.151"),// IP白名单 (没有配置或者为空，则允许所有访问)
+        @WebInitParam(name="loginUsername",value="otaku"),// 用户名
+        @WebInitParam(name="loginPassword",value="BBBBBDJJNii21z"),// 密码
         @WebInitParam(name="resetEnable",value="false")// 禁用HTML页面上的“Reset All”功能
 })
 public class DruidStatViewServlet extends StatViewServlet {
