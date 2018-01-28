@@ -803,6 +803,126 @@ public class MacdCrossCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andMaxpriceIsNull() {
+            addCriterion("maxprice is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxpriceIsNotNull() {
+            addCriterion("maxprice is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxpriceEqualTo(Double value) {
+            addCriterion("maxprice =", value, "maxprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxpriceNotEqualTo(Double value) {
+            addCriterion("maxprice <>", value, "maxprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxpriceGreaterThan(Double value) {
+            addCriterion("maxprice >", value, "maxprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxpriceGreaterThanOrEqualTo(Double value) {
+            addCriterion("maxprice >=", value, "maxprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxpriceLessThan(Double value) {
+            addCriterion("maxprice <", value, "maxprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxpriceLessThanOrEqualTo(Double value) {
+            addCriterion("maxprice <=", value, "maxprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxpriceIn(List<Double> values) {
+            addCriterion("maxprice in", values, "maxprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxpriceNotIn(List<Double> values) {
+            addCriterion("maxprice not in", values, "maxprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxpriceBetween(Double value1, Double value2) {
+            addCriterion("maxprice between", value1, value2, "maxprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxpriceNotBetween(Double value1, Double value2) {
+            addCriterion("maxprice not between", value1, value2, "maxprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinpriceIsNull() {
+            addCriterion("minprice is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinpriceIsNotNull() {
+            addCriterion("minprice is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinpriceEqualTo(Double value) {
+            addCriterion("minprice =", value, "minprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinpriceNotEqualTo(Double value) {
+            addCriterion("minprice <>", value, "minprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinpriceGreaterThan(Double value) {
+            addCriterion("minprice >", value, "minprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinpriceGreaterThanOrEqualTo(Double value) {
+            addCriterion("minprice >=", value, "minprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinpriceLessThan(Double value) {
+            addCriterion("minprice <", value, "minprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinpriceLessThanOrEqualTo(Double value) {
+            addCriterion("minprice <=", value, "minprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinpriceIn(List<Double> values) {
+            addCriterion("minprice in", values, "minprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinpriceNotIn(List<Double> values) {
+            addCriterion("minprice not in", values, "minprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinpriceBetween(Double value1, Double value2) {
+            addCriterion("minprice between", value1, value2, "minprice");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinpriceNotBetween(Double value1, Double value2) {
+            addCriterion("minprice not between", value1, value2, "minprice");
+            return (Criteria) this;
+        }
+
         public Criteria andPeriodIsNull() {
             addCriterion("period is null");
             return (Criteria) this;

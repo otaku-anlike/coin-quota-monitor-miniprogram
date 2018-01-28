@@ -19,6 +19,8 @@ public class WxSendBean {
     private String exchange;
     /** 价格*/
     private String price;
+    /** 交易量*/
+    private String volume;
     /** 币种*/
     private String symbol;
     /** 交叉类型*/
@@ -29,6 +31,8 @@ public class WxSendBean {
     private String status;
     /** 交叉时间*/
     private String time;
+    /** 斐波那契回调线 */
+    private List<PositionBean> fibonacciList;
     /** 各种指标*/
     private List<WxSendQuotaBean> quotaList;
 

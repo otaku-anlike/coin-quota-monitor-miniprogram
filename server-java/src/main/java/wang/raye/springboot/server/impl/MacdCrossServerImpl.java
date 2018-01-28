@@ -22,7 +22,7 @@ import wang.raye.springboot.utils.*;
 import java.util.*;
 
 /**
- * 用户相关数据库操作实现类
+ * 指标交叉相关数据库操作实现类
  * @author Raye
  * @since 2016年10月11日19:29:02
  */
@@ -41,6 +41,8 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 	private AlertMapper alertMapper;
 	@Autowired
 	private AlertSettingMapper alertSettingMapper;
+	@Autowired
+	private AlertUserMapper alertUserMapper;
 
 	@Autowired
 	private WxSendUtils wxSendUtils;
@@ -56,8 +58,8 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 	private String MACD;
 	@Value("${self.type.kdj}")
 	private String KDJ;
-	@Value("${self.sckey}")
-	private String SCKEY;
+//	@Value("${self.sckey}")
+//	private String SCKEY;
 
 	@Override
 	public boolean binanceMacdCross(CandlestickInterval periods) {
@@ -75,22 +77,44 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 			String period = periods.getIntervalId();
 			//调api获取k线
 			List<Candlestick> candlestickList = client.getCandlestickBars(symbols.getSymbol(), periods);
+
+//			log.info(symbols + "->"+ period + "->k线数组的长度:" + candlestickList.size());
+			List<Double> priceHighList = new ArrayList<>();
+			List<Double> priceLowList = new ArrayList<>();
+//			double maxPriceTmp = Double.valueOf(candlestickList.get(0).getHigh());
+//			double minPriceTmp = Double.valueOf(candlestickList.get(0).getLow());
+			for (Candlestick candlestick: candlestickList) {
+				priceHighList.add(Double.valueOf(candlestick.getHigh()));
+				priceLowList.add(Double.valueOf(candlestick.getLow()));
+
+//				if (Double.valueOf(candlestick.getHigh()) > maxPriceTmp) {
+//					maxPriceTmp = Double.valueOf(candlestick.getHigh());
+//				}
+//				if (Double.valueOf(candlestick.getLow()) < minPriceTmp) {
+//					minPriceTmp = Double.valueOf(candlestick.getLow());
+//				}
+			}
+			double maxPrice = Collections.max(priceHighList);
+			double minPrice =Collections.min(priceLowList);
+//			log.info(symbol + "->"+ period + "->最高:" + maxPrice +"->最低:" +minPrice);
+//			log.info(symbol + "->"+ period + "->自算最高:" + maxPriceTmp +"->自算最低:" +minPriceTmp);
 			// 收盘价
 			double close = Double.valueOf(candlestickList.get(candlestickList.size()-1).getClose());
+			Candlestick lastCandle = candlestickList.get(candlestickList.size()-1);
 
 			//MACD
 			List<MacdBean> macdBeanList =  quotaUtils.getMACD(12,26,9,candlestickList);
 			String statusMacd = quotaCrossUtils.getMACDCross(macdBeanList, candlestickList);
 			MacdBean lastMacdBean = macdBeanList.get(macdBeanList.size() - 1);
 			// 保存MACD数据
-			this.saveCross(BINANCE, symbol, period, MACD, statusMacd, close,lastMacdBean.getDif(),lastMacdBean.getDea(),lastMacdBean.getBar());
+			this.saveCross(BINANCE, symbol, period, MACD, statusMacd, lastCandle,lastMacdBean.getDif(),lastMacdBean.getDea(),lastMacdBean.getBar(), maxPrice, minPrice);
 
 			//KDJ
 			List<KdjBean> kdjBeanList = quotaUtils.getKDJ(9,3,3,candlestickList);
 			String statusKdj = quotaCrossUtils.getKdjCross(kdjBeanList, candlestickList);
 			KdjBean lastKdjBean = kdjBeanList.get(kdjBeanList.size() - 1);
 			// 保存KDJ数据
-			this.saveCross(BINANCE, symbol, period, KDJ, statusKdj, close, lastKdjBean.getK(), lastKdjBean.getD(), lastKdjBean.getJ());
+			this.saveCross(BINANCE, symbol, period, KDJ, statusKdj, lastCandle, lastKdjBean.getK(), lastKdjBean.getD(), lastKdjBean.getJ(), maxPrice, minPrice);
 
 			try {
 				Thread.sleep(2000);
@@ -110,30 +134,29 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 	 * @param period k线周期
 	 * @param type 指标类型
 	 * @param status 指标状态
-	 * @param close 收盘价
+	 * @param lastCandle 最近的k线数据
 	 */
 	private void saveCross (String exchange, String symbol, String period, String type, String status,
-							double close, double quota1, double quota2, double quota3) {
+							Candlestick lastCandle, double quota1, double quota2, double quota3, double maxPrice, double minPrice) {
 		List<MacdCross> existList = this.getMacdCross(exchange, symbol, period, type);
 
 		if (existList.size() > 0) {
-			this.modMacdCross(existList,status, close, quota1, quota2, quota3);
+			this.modMacdCross(existList,status, Double.valueOf(lastCandle.getClose()), quota1, quota2, quota3, maxPrice, minPrice);
 		} else {
-			this.addMacdCross(exchange, symbol, period, type, status, close, quota1, quota2, quota3);
+			this.addMacdCross(exchange, symbol, period, type, status, Double.valueOf(lastCandle.getClose()), quota1, quota2, quota3, maxPrice, minPrice);
 		}
 
-		// 金叉或者死叉时
-		if ("2".equals(status) || "4".equals(status)) {
+		// 空仓或者持有时不需要记录历史数据
+		if (!("1".equals(status) || "3".equals(status))) {
 			List<MacdCrossHistory> macdCrossHistoryExistList = this.getMacdCrossHistory(exchange, symbol, period, type, status);
 			if (macdCrossHistoryExistList.size() > 0) {
-				this.modMacdCrossHistory(macdCrossHistoryExistList,close, quota1, quota2, quota3);
+				this.modMacdCrossHistory(macdCrossHistoryExistList,Double.valueOf(lastCandle.getClose()), quota1, quota2, quota3);
 			} else {
-				this.addMacdCrossHistory(exchange, symbol, period, type, status, close, quota1, quota2, quota3);
+				this.addMacdCrossHistory(exchange, symbol, period, type, status, Double.valueOf(lastCandle.getClose()), quota1, quota2, quota3);
 			}
-
-			// 保存提醒数据
-			this.saveAlert( exchange, symbol,period, type, status, close);
 		}
+		// 保存提醒数据
+		this.saveAlert( exchange, symbol,period, type, status, lastCandle, maxPrice, minPrice);
 	}
 
 	/**
@@ -143,9 +166,10 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 	 * @param period
 	 * @param type
 	 * @param status
-	 * @param close
+	 * @param lastCandle
 	 */
-	private void saveAlert (String exchange, String symbol, String period, String type, String status, double close) {
+	private void saveAlert (String exchange, String symbol, String period, String type, String status,
+							Candlestick lastCandle, double maxPrice, double minPrice) {
 		List<AlertSetting> alertSettingExistList = this.getAlertSetting(exchange, status, period, type);
 		if (null != alertSettingExistList && alertSettingExistList.size() > 0) {
 			String openflg = alertSettingExistList.get(0).getOpenflg();
@@ -156,17 +180,22 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 				if (alertExistList.size() > 0) {
 					Alert alert = alertExistList.get(0);
 					if (!status.equals(alert.getStatus())) {
-						this.modAlert(alertExistList, status, close);
+						this.modAlert(alertExistList, status, Double.valueOf(lastCandle.getClose()));
 						isNeedSend = true;
 					}
 				} else {
-					this.addAlert(exchange, symbol, period, type, status, close);
+					this.addAlert(exchange, symbol, period, type, status, Double.valueOf(lastCandle.getClose()));
 					isNeedSend = true;
 				}
 				if (isNeedSend) {
 					// 只发生BTC交易对的交叉提醒
 					if (symbol.indexOf("BTC") > 0) {
-						this.sendCross(SCKEY,exchange, symbol, period, type, status,close);
+						List<AlertUser> alertUsers= this.getAlertUsers();
+						// 算出裴波那契回调数据
+						List<PositionBean> fibonacciList = PostionUtils.getFibonacciRetrace(maxPrice, minPrice);
+						for(AlertUser alertUser : alertUsers) {
+							this.sendCross(alertUser.getSckey(),exchange, symbol, period, type, status,lastCandle,fibonacciList);
+						}
 					}
 				}
 			}
@@ -198,7 +227,7 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 	 * @param close
 	 */
 	private void modMacdCross(List<MacdCross> list, String status,
-							  double close, double quota1, double quota2, double quota3) {
+							  double close, double quota1, double quota2, double quota3, double maxPrice, double minPrice) {
 		MacdCross macdCross = list.get(0);
 		macdCross.setStatus(status);
 		macdCross.setPrice(close);
@@ -206,6 +235,8 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 		macdCross.setQuota1(quota1);
 		macdCross.setQuota2(quota2);
 		macdCross.setQuota3(quota3);
+		macdCross.setMaxprice(maxPrice);
+		macdCross.setMinprice(minPrice);
 		macdCrossMapper.updateByPrimaryKey(macdCross);
 	}
 
@@ -219,7 +250,7 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 	 * @param close
 	 */
 	private void addMacdCross (String exchange, String symbol, String period, String type, String status,
-							   double close, double quota1, double quota2, double quota3) {
+							   double close, double quota1, double quota2, double quota3, double maxPrice, double minPrice) {
 		MacdCross macdCross = new MacdCross();
 		macdCross.setExchange(exchange);
 		macdCross.setSymbol(symbol);
@@ -231,6 +262,8 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 		macdCross.setQuota1(quota1);
 		macdCross.setQuota2(quota2);
 		macdCross.setQuota3(quota3);
+		macdCross.setMaxprice(maxPrice);
+		macdCross.setMinprice(minPrice);
 		macdCrossMapper.insert(macdCross);
 	}
 
@@ -323,16 +356,18 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 		alertMapper.insert(alert);
 	}
 
-	private void sendCross(String sckey,String exchange, String symbol, String period, String type, String status, double close){
+	private void sendCross(String sckey,String exchange, String symbol, String period, String type, String status, Candlestick lastCandle, List<PositionBean> fibonacciList){
 		WxSendBean sendBean = new WxSendBean();
 		sendBean.setSckey(sckey);
 		sendBean.setExchange(exchange);
-		sendBean.setPrice(ParseUtils.parsePrice(close));
+		sendBean.setPrice(ParseUtils.parsePrice(lastCandle.getClose()));
 		sendBean.setSymbol(symbol);
 		sendBean.setStatus(status);
 		sendBean.setType(type);
 		sendBean.setTime(DateUtils.getTodayShort());
 		sendBean.setPeriod(period);
+		sendBean.setFibonacciList(fibonacciList);
+		sendBean.setVolume(lastCandle.getVolume());
 
 		List<WxSendQuotaBean> quotaList = new ArrayList<>();
 		List<MacdCross> typeList = this.getSendMacdType(exchange,symbol);
@@ -392,5 +427,13 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 				.andTypeEqualTo(type);
 		condMacdCross.setOrderByClause("period asc");
 		return macdCrossMapper.selectByExample(condMacdCross);
+	}
+
+
+	private List<AlertUser> getAlertUsers() {
+		AlertUserCriteria cond = new AlertUserCriteria();
+		cond.createCriteria()
+				.andOpenflgEqualTo("1");
+		return alertUserMapper.selectByExample(cond);
 	}
 }

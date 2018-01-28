@@ -70,6 +70,14 @@ public class QuotaCrossUtils {
 			//判断死叉条件：
 			//            return 2;//返回2 代表 死叉信号。
 			result = "3";//'继续持有';
+		} else if (last.getJ() > 100) {
+			//判断死叉条件：
+			//            return 2;//返回2 代表 死叉信号。
+			result = "5";//'超买';
+		} else if (last.getJ() < 0) {
+			//判断死叉条件：
+			//            return 2;//返回2 代表 死叉信号。
+			result = "6";//'超卖';
 		}
 		return result;
 	}

@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import wang.raye.springboot.bean.PositionBean;
 import wang.raye.springboot.bean.WxSendBean;
 import wang.raye.springboot.bean.WxSendQuotaBean;
 import wang.raye.springboot.bean.WxSendQuotaPeriodBean;
@@ -90,16 +91,25 @@ public class WxSendUtils {
     }
 
     private String getMarkdownDesp (WxSendBean sendBean) {
+        double volume = Double.valueOf(sendBean.getPrice())*Double.valueOf(sendBean.getVolume());
         StringBuffer desp = new StringBuffer();
         desp.append(" <table> ").append("\n");
         desp.append("  <tr> ").append("\n");
-        desp.append("    <th> "+sendBean.getExchange()+"   </th> ").append("\n");
-        desp.append("    <th>    "+sendBean.getSymbol()+"  [价格:*"+sendBean.getPrice()+"*] </th> ").append("\n");
-        desp.append("    <th> "+sendBean.getType()+"  "+sendBean.getPeriod()+" ["+ParseUtils.parseCrossStatus(sendBean.getStatus())+"]   *"+sendBean.getTime()+"* </th> ").append("\n");
+        desp.append("    <th>"+sendBean.getExchange()+"   </th> ").append("\n");
+        desp.append("    <th> "+sendBean.getSymbol()+"["+sendBean.getPrice()+"][量:"+ParseUtils.decimalFormat(volume,ParseUtils.TwoPattern)+"] </th> ").append("\n");
+        desp.append("    <th>   "+sendBean.getType()+"  "+sendBean.getPeriod()+" ["+ParseUtils.parseCrossStatus(sendBean.getStatus())+"] *"+sendBean.getTime()+"* </th> ").append("\n");
         desp.append("  </tr> ").append("\n");
+
+        desp.append("  <tr> ").append("\n");
+        desp.append("   <td>   "+"支撑阻力位:----------"+"  </td> ").append("\n");
+        for(PositionBean position :sendBean.getFibonacciList()) {
+            desp.append("   <td>    "+position.getPostion()+" ["+position.getPrice()+"] </td> ").append("\n");
+        }
+        desp.append("  </tr> ").append("\n");
+
         for (WxSendQuotaBean quotaBean :sendBean.getQuotaList()) {
             desp.append("  <tr> ").append("\n");
-            desp.append("   <td> "+quotaBean.getType()+"  </td> ").append("\n");
+            desp.append("   <td>   "+quotaBean.getType()+"  </td> ").append("\n");
             for(WxSendQuotaPeriodBean periodBean :quotaBean.getPeriodList()) {
                 desp.append("   <td>     "+periodBean.getPeriod()+"  ["+ParseUtils.parseCrossStatus(periodBean.getStatus())+"]    </td> ").append("\n");
             }
