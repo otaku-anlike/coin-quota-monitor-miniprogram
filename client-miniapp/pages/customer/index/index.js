@@ -4,6 +4,7 @@ const { aboutMe } = require('../../../components/mine-top/mine-top.js');
 var arrList = require('../../../api/kaizhang/shop.js');
 var searchImgText = require('../../../image/customer/index/searchImgText.js');
 let { chooseRole } = require('../../../components/guide/guide');
+var config = require('../../../config')
 var app = getApp()
 Page({
   data: {
@@ -95,19 +96,7 @@ Page({
     //     console.log('redirectTo')
     //   }
     // })
-    wx.request({
-      url: 'https://www.natiac.cn/user/all', //仅为示例，并非真实的接口地址
-      data: {
-        // x: '',
-        // y: ''
-      },
-      header: {
-        'content-type': 'application/json'
-      },
-      success: function (res) {
-        console.log(res)
-      }
-    })
+
     const _this = this;
     // wx.showNavigationBarLoading()
     this.setScrollHeight();
@@ -118,7 +107,7 @@ Page({
         userInfo:userInfo
       })
     })
-    // this.getApiData();
+    this.getApiData();
   },
   onShow:function(){
       //判断是否为回退切换角色
@@ -147,7 +136,6 @@ Page({
           showContent:false
       })
   },
-
  //距离或会否开张选择
   tapSlideItem:function(e){
       console.log(1,e.currentTarget.dataset.itemcon);
@@ -315,11 +303,14 @@ Page({
 
   toLower:function(e){
     console.log(2,e)
-    // wx.showToast({
-    //   title:'加载中...',
-    //   icon:'loading',
-    //   duration:2000
-    // })
+    this.setData({
+      hasMore:false
+    })
+    wx.showToast({
+      title:'加载中...',
+      icon:'loading',
+      duration:2000
+    })
   },
   scroll:function(e){
       console.log(e)
@@ -380,16 +371,22 @@ closeDiscountDetail:function(){
 
 
   getApiData:function(){
+    const _this = this;
     wx.request({
-      url: 'https://www.natiac.cn:8091/user/all', //仅为示例，并非真实的接口地址
+      url: config.service.listUrl, //仅为示例，并非真实的接口地址
       data: {
-        x: '' ,
-        y: ''
+        exchange: 'binance',
+        type: 'MACD',
+        period: '1h',
+        status: '2'
       },
       header: {
           'content-type': 'application/json'
       },
       success: function(res) {
+        _this.setData({
+          arrList:res.data
+        })
         console.log(res.data)
       }
     })
@@ -404,7 +401,7 @@ closeDiscountDetail:function(){
     const leftHeight = searchHeight*1 + noticeHeight + tabbarHeight;
     wx.getSystemInfo({
       success: function(res) {
-        scrollHeight = res.windowHeight- (leftHeight/res.pixelRatio).toFixed(2) ;
+        scrollHeight = res.windowHeight- (leftHeight/res.pixelRatio).toFixed(2) + 40 ;
         const scrollHeightMine = res.windowHeight- (tabbarHeight/res.pixelRatio).toFixed(2) ;
         _this.setData({
           scrollHeight:scrollHeight,

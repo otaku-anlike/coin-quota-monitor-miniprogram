@@ -44,7 +44,7 @@
             </view>
         </view>
     </view>
-    <view class="notice" style="height:{{noticeHeight}}rpx">
+    <view class="notice" style="height:{{noticeHeight}}rpx" hidden='true'>
       <image src="/image/common/icon_notice.png"></image>
       <swiper class="notice-slider" 
       autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
@@ -53,8 +53,6 @@
         </swiper-item>
       </swiper>
     </view>
-
-
 
     <view class="container">
       <scroll-view scroll-y="true" scroll-top="{{scrollTop}}" class="scroll-view-con" style="height:{{scrollHeight}}px;width:100%"  bindscrolltolower="toLower" bindscroll="scroll">
