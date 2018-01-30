@@ -159,13 +159,15 @@ page .scroll-view-con {
 .scroll-item-content .content-center .shop-tag {
   padding-top: 10rpx;
 }
-.scroll-item-content .content-center .shop-introduce,.scroll-item-content .content-center .shop-address {
+.scroll-item-content .content-center  .shop-introduce,.scroll-item-content .content-center .shop-address {
   font-size: 26rpx;
   color: #808080;
-  padding-top: 20rpx;
+  /* padding-top: 10rpx; */
+  /* padding-right:50rpx; */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  width: 688rpx;
 } 
 .scroll-item-content .content-right {
   flex: 1;

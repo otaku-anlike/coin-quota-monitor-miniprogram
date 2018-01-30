@@ -15,7 +15,9 @@ var config = {
     loginUrl: `${host}/weapp/login`,
 
     // 指标列表地址，用于获取币种的指标
-    listUrl: `${host}/macd/list`
+    listUrl: `${host}/macd/list`,
+    // 指标详情地址，用于获取币种的指标
+    detailUrl: `${host}/macd/detail`
   }
 };
 

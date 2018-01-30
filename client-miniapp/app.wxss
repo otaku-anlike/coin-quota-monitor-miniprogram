@@ -71,20 +71,32 @@ page {
 .f6 {
   font-size: 22rpx;
 }
-.discount-tag {
-  background-color: #ff85a4;
+.exchange-tag {
+  background-color: #CDB79E;
   border-radius: 8rpx;
 }
-.open-tag {
-  background-color: #c60e16;
+.type-tag {
+  background-color: #CD853F;
   border-radius: 8rpx;
 }
-.rest-tag {
-  background-color: #5380e6;
+.period-tag {
+  background-color: #CD69C9;
+  border-radius: 8rpx;
+}
+.status-tag {
+  background-color: #EEA2AD;
   border-radius: 8rpx;
 }
 .attention-tag {
   background-color: #ffae00;
+}
+.up-tag {
+  background-color: #43CD80;
+  border-radius: 8rpx;
+}
+.down-tag {
+  background-color: #c60e16;
+  border-radius: 8rpx;
 }
 /*无边框*/
 .border-none {

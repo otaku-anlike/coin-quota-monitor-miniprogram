@@ -56,24 +56,31 @@
 
     <view class="container">
       <scroll-view scroll-y="true" scroll-top="{{scrollTop}}" class="scroll-view-con" style="height:{{scrollHeight}}px;width:100%"  bindscrolltolower="toLower" bindscroll="scroll">
-          <view wx:for="{{arrList}}" wx:key="unique" class="scroll-item-content" bindtap="merchantDetail">
-            <image class="centent-left" src="/image/customer/index/3jianhui.png" mode="aspectFit"></image>
+          <view wx:for="{{arrList}}" wx:key="unique" class="scroll-item-content" bindtap="merchantDetail" data-id="{{item.id}}">
+          <!-- {{item.symbol}} -->
+            <!-- <image class="centent-left" src="/image/customer/index/3jianhui.png" mode="aspectFit"></image> -->
             <view class="content-center">
-              <view class="shop-name">商户名称商户名称</view>
+              <view class="shop-name">{{item.symbol}}</view>
               <view class="shop-tag">
-                <view class="tag discount-tag">优惠</view>
-                <view class="tag open-tag">开张中</view>
-                <view class="tag rest-tag">休息中</view>
+                <view class="tag exchange-tag">{{item.exchange}}</view>
+                <view class="tag type-tag">{{item.type}}</view>
+                <view class="tag period-tag">{{item.period}}</view>
+                <view class="tag status-tag">{{item.status}}</view>
               </view>
-              <view class="shop-introduce">商户简介简介简介简介简介简介简</view>
-              <view class="shop-address">商户地址地址地址地址地址地址地址地址</view>
+              <view class="shop-tag">
+                <view class="shop-introduce">交叉价格:{{item.price}}</view>
+                <view class="tag up-tag">{{item.type}}</view>
+              </view>
+              
+              <!-- <view class="shop-address">商户地址地址地址地址地址地址地址地址</view> -->
             </view>
             <view class="content-right">
               <view class="distence">
-                  <image src="/image/customer/index/3xyh.png"></image>
-                  <text>200m</text>
+                  <!-- <image src="/image/customer/index/3xyh.png"></image> -->
+                  <text>{{item.time}}</text>
               </view>
-              <image class="content-right-img" src="/image/customer/index/12dianhua.png" mode="aspectFit"></image>
+              <text>{{item.price}}</text>
+              <!-- <image class="content-right-img" src="/image/customer/index/12dianhua.png" mode="aspectFit"></image> -->
             </view>
           </view>
           

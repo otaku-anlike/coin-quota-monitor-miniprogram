@@ -1,6 +1,6 @@
 <scroll-view scroll-y="true" class="container" style="height:{{scrollHeight}}px">
     <swiper class="swiper-wrap"
-  autoplay="true" interval="3000" duration="1000" circular="true">
+  autoplay="true" interval="3000" duration="1000" circular="true" hidden='true'>
         <swiper-item wx:for="{{imgUrls}}">
         <image class="swiper-img" src="../../../image/customer/detail/13shouchong.png"/>
         </swiper-item>
@@ -8,7 +8,7 @@
     <view class="shop-status">
         <view class="status-left">
             <view class="left-top">
-                <view class="shop-name f1 c5">商户名称商户名称</view>
+                <view class="shop-name f1 c5">{{info.symbol}}</view>
                 <view class="status">营业中</view>
             </view>
             <view class="open-time f2 c4">营业时间：9:00-18:00 </view>

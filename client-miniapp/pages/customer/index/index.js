@@ -5,6 +5,7 @@ var arrList = require('../../../api/kaizhang/shop.js');
 var searchImgText = require('../../../image/customer/index/searchImgText.js');
 let { chooseRole } = require('../../../components/guide/guide');
 var config = require('../../../config')
+const utils = require('../../../utils/util.js');
 var app = getApp()
 Page({
   data: {
@@ -71,14 +72,15 @@ Page({
 
   },
   onPullDownRefresh:function(){
-    console.log(123456780987654)
-    // const that = this;
-    // setTimeout(function(){
-    //   wx.stopPullDownRefresh();
-    //   that.setData({
-    //     showMask:true
-    //   })
-    // },200)
+    // console.log(123456780987654)
+    const that = this;
+    setTimeout(function(){
+      wx.stopPullDownRefresh();
+      that.getApiData();
+      that.setData({
+        showMask:true
+      })
+    },200)
   },
   chooseRole,
   onLoad: function () {
@@ -254,8 +256,9 @@ Page({
 
 
   merchantDetail:function(e){
+    console.log(e)
     wx.navigateTo({
-      url: '../detail/detail',
+      url: '../detail/detail?id=' + e.currentTarget.dataset.id,
       success: function(res){
         // success
       },
@@ -378,16 +381,20 @@ closeDiscountDetail:function(){
         exchange: 'binance',
         type: 'MACD',
         period: '1h',
-        status: '2'
+        status: ''
       },
       header: {
           'content-type': 'application/json'
       },
       success: function(res) {
+        console.log(res.data)
+        res.data.forEach(function (item, index) {
+          item.status = utils.parseStatus(item.status)
+          item.time = utils.formatDateTime(item.time)
+        });
         _this.setData({
           arrList:res.data
         })
-        console.log(res.data)
       }
     })
   },

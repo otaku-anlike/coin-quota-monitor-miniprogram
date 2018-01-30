@@ -1,9 +1,11 @@
+var config = require('../../../config')
 var app = getApp()
 Page({
   data: {
     wrapTopHeight:400,
     imgUrls:['','',''],
-    scrollHeight:'0'
+    scrollHeight:'0',
+    info:null
   },
   deleteWrapTop:function(){
       console.log(222)
@@ -11,10 +13,28 @@ Page({
          wrapTopHeight:0 
       });
   },
-  onLoad: function () {
+  onLoad: function (options) {
       this.setScrollHeight();
+      this.getApiDatailData(options.id);
   },
-
+  getApiDatailData: function (id) {
+    const _this = this;
+    wx.request({
+      url: config.service.detailUrl, //仅为示例，并非真实的接口地址
+      data: {
+        id: id
+      },
+      header: {
+        'content-type': 'application/json'
+      },
+      success: function (res) {
+        console.log(res.data)
+        _this.setData({
+          info: res.data
+        })
+      }
+    })
+  },
 
 
 
