@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import wang.raye.springboot.bean.KdjBean;
 import wang.raye.springboot.bean.MacdBean;
+import wang.raye.springboot.bean.RsiBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,6 +164,240 @@ public class QuotaUtils {
 //		}
 		return value;
 	}
+
+	/**
+	 * SMA(C,N,M) = (M*C+(N-M)*Y')/N
+	 * LC := REF(CLOSE,1);
+	 * RSI$1:SMA(MAX(CLOSE-LC,0),N1,1)/SMA(ABS(CLOSE-LC),N1,1)*100;
+	 */
+	public List countRSIdatas(List<Candlestick> list, int days) {
+		List rsiList = new ArrayList();
+		if (list == null)
+			return null;
+		if (days > list.size())
+			return null;
+
+		double smaMax = 0, smaAbs = 0;//默认0
+		double lc = 0;//默认0
+		double close = 0;
+		double rsi = 0;
+		for (int i = 1; i < list.size(); i++) {
+			Candlestick entity = list.get(i);
+			lc = Double.valueOf(list.get(i - 1).getClose());
+			close = Double.valueOf(entity.getClose());
+			smaMax = this.countSMA(Math.max(close - lc, 0d), days, 1, smaMax);
+			smaAbs = this.countSMA(Math.abs(close - lc), days, 1, smaAbs);
+			rsi = smaMax / smaAbs * 100;
+
+			rsiList.add(RsiBean.builder().rsi(rsi));
+		}
+//		Log.v(TAG, "rsiList.size()=" + rsiList.size());
+
+//		int size = list.size() - rsiList.size();
+//		for (int i = 0; i < size; i++) {
+//			rsiList.add(0, new KCandleObj());
+//		}
+		return rsiList;
+	}
+
+	/**
+	 * SMA(C,N,M) = (M*C+(N-M)*Y')/N
+	 * C=今天收盘价－昨天收盘价    N＝就是周期比如 6或者12或者24， M＝权重，其实就是1
+	 *
+	 * @param c   今天收盘价－昨天收盘价
+	 * @param n   周期
+	 * @param m   1
+	 * @param sma 上一个周期的sma
+	 * @return
+	 */
+	private double countSMA(double c, double n, double m, double sma) {
+		return (m * c + (n - m) * sma) / n;
+	}
+
+	/**
+	 * LLV  n周期内的最低值 取low字段
+	 *
+	 * @param list 数据集合
+	 * @param n 周期
+	 * @return
+	 */
+	public List<Double> LLV(List<Candlestick> list, int n) {
+		if (list == null || list.size() == 0)
+			return null;
+		List<Double> datas = new ArrayList<>();
+
+		double minValue = 0;
+		for (int i = n - 1; i < list.size(); i++) {
+			for (int j = i - n + 1; j <= i; j++) {
+				if (j == i - n + 1) {
+					minValue = Double.valueOf(list.get(j).getLow());
+				} else {
+					minValue = Math.min(minValue, Double.valueOf(list.get(j).getLow()));
+				}
+			}
+			datas.add(minValue);
+		}
+
+		return datas;
+	}
+
+	/**
+	 * HHV n周期内的最大值 取high字段
+	 *
+	 * @param list 数据集合
+	 * @param n 周期
+	 * @return
+	 */
+	public List<Double> HHV(List<Candlestick> list, int n) {
+		if (list == null || list.size() == 0)
+			return null;
+		List<Double> datas = new ArrayList<>();
+
+		double maxValue = Double.valueOf(list.get(0).getHigh());
+		for (int i = n - 1; i < list.size(); i++) {
+			for (int j = i - n + 1; j <= i; j++) {
+				if (j == i - n + 1) {
+					maxValue = Double.valueOf(list.get(j).getHigh());
+				} else {
+					maxValue = Math.max(maxValue, Double.valueOf(list.get(j).getHigh()));
+				}
+			}
+			datas.add(maxValue);
+		}
+		return datas;
+	}
+
+
+	/**
+	 * kdj 9,3,3
+	 * N:=9; P1:=3; P2:=3;
+	 * RSV:=(CLOSE-LLV(LOW,N))/(HHV(HIGH,N)-LLV(LOW,N))*100;
+	 * K:SMA(RSV,P1,1);
+	 * D:SMA(K,P2,1);
+	 * J:3*K-2*D;
+	 * @param list 数据集合
+	 * @param n 指标周期 9
+	 * @param P1 参数值为3
+	 * @param P2 参数值为3
+	 * @return
+	 */
+	public List<KdjBean> getKDJLinesDatas(
+			List<Candlestick> list, int n, int P1, int P2) {
+		if (list == null || list.size() == 0)
+			return null;
+		int cycle = n;
+		if (n > list.size()) {
+			return null;
+		}
+		List<KdjBean> resultList = new ArrayList<>();
+
+//		List kValue = new ArrayList();
+//		List dValue = new ArrayList();
+//		List jValue = new ArrayList();
+
+		List<Double> maxs = HHV(list, n);
+		List<Double> mins = LLV(list, n);
+		if (maxs == null || mins == null)
+			return null;
+		//确保和 传入的list size一致，
+//		int size = list.size() - maxs.size();
+//		for (int i = 0; i < size; i++) {
+//			maxs.add(0, new KCandleObj());
+//			mins.add(0, new KCandleObj());
+//		}
+		double rsv = 0;
+		double lastK = 50;
+		double lastD = 50;
+		for (int i = cycle - 1; i < list.size(); i++) {
+			if (i >= maxs.size())
+				break;
+			if (i >= mins.size())
+				break;
+			double div = maxs.get(i) - mins.get(i);
+			if (div == 0) {
+				//使用上一次的
+			} else {
+				rsv = ((Double.valueOf(list.get(i).getClose()) - mins.get(i))
+						/ (div)) * 100;
+			}
+
+			double k = countSMA(rsv, P1, 1, lastK);
+
+//			try {
+//				BigDecimal big = new BigDecimal(k);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+			double d = countSMA(k, P2, 1, lastD);
+			double j = 3 * k - 2 * d;
+			lastK = k;
+			lastD = d;
+			KdjBean kdjBean = new KdjBean();
+			kdjBean.setK(k);
+			kdjBean.setD(d);
+			kdjBean.setJ(j);
+			resultList.add(kdjBean);
+//			kValue.add(new KCandleObj(k));
+//			dValue.add(new KCandleObj(d));
+//			jValue.add(new KCandleObj(j));
+		}
+
+
+		//确保和 传入的list size一致，
+//		size = list.size() - kValue.size();
+//		for (int i = 0; i < size; i++) {
+//			kValue.add(0, new KCandleObj());
+//			dValue.add(0, new KCandleObj());
+//			jValue.add(0, new KCandleObj());
+//		}
+//
+//		List<KLineObj> lineDatas = new ArrayList<KLineObj>();
+//
+//		KLineObj kLine = new KLineObj();
+//		kLine.setLineData(kValue);
+//		kLine.setTitle("K");
+//		kLine.setLineColor(KParamConfig.COLOR_KDJ_K);
+//		lineDatas.add(kLine);
+//
+//		KLineObj dLine = new KLineObj();
+//		dLine.setLineData(dValue);
+//		dLine.setTitle("D");
+//		dLine.setLineColor(KParamConfig.COLOR_KDJ_D);
+//		lineDatas.add(dLine);
+
+//        KLineObj jLine = new KLineObj();
+//        jLine.setLineData(jValue);
+//        jLine.setTitle("J");
+//        jLine.setLineColor(KParamConfig.COLOR_KDJ_J);
+//        lineDatas.add(jLine);
+
+//		//加两条固定线 30  70
+//		KLineObj line30 = new KLineObj();
+//		line30.setLineColor(KParamConfig.COLOR_KDJ_30);
+//		line30.setLineValue(KParamConfig.VALUE_KDJ_01);
+//		lineDatas.add(line30);
+//
+//		KLineObj line70 = new KLineObj();
+//		line70.setLineColor(KParamConfig.COLOR_KDJ_70);
+//		line70.setLineValue(KParamConfig.VALUE_KDJ_02);
+//		lineDatas.add(line70);
+
+		return resultList;
+	}
+
+	/**
+	 * SMA(C,N,M) = (M*C+(N-M)*Y')/N
+	 * C=今天收盘价－昨天收盘价    N＝就是周期比如 6或者12或者24， M＝权重，其实就是1
+	 *
+	 * @param c   今天收盘价－昨天收盘价
+	 * @param n   周期
+	 * @param m   1
+	 * @param sma 上一个周期的sma
+	 * @return
+	 */
+//	public double countSMA(double c, double n, double m, double sma) {
+//		return (m * c + (n - m) * sma) / n;
+//	}
 
 
 }

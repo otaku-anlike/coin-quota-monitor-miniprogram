@@ -95,6 +95,10 @@
           <view wx:if="{{hasMore}}"><image src="../../../image/loading.gif" mode="aspectFill"/><text>加载中...</text></view>
           <view wx:else><text>没有更多内容了</text></view>
         </view>
+        <canvas canvas-id="first_canvas"
+bindtouchstart="onTouchStart" bindtouchmove="onTouchMove" bindtouchend="onTouchEnd" bindtouchcancel="onTouchCancel"
+style="height:350px;width:100%;border:0px solid #000;" >
+</canvas>
 
     </view>
 </scroll-view>
