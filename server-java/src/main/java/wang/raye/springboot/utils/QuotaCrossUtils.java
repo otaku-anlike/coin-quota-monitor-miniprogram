@@ -18,14 +18,14 @@ import java.util.List;
 public class QuotaCrossUtils {
 
 
-	public String getMACDCross(List<MacdBean> macdBeanList, List<Candlestick> candlestickList){
+	public String getMACDCross(List<MacdBean> macdBeanList, int len){
 		String result = "1";//空仓等待';
 		// var macd = TA.MACD(records,12,26,9);//调用指标函数， 参数为MACD 默认的参数。
 		// var output = kline.chartMgr._indic._outputs;
 //		double dif = macdBean.dif; //dif线
 //		var dea = macdBean.dea; //dea线
 //		var column = macdBean.column; // MACD柱
-		int len = candlestickList.size(); //K线周期长度
+//		int len = candlestickList.size(); //K线周期长度
 		MacdBean last = macdBeanList.get(len - 1);
 		MacdBean second  = macdBeanList.get(len - 2);
 
@@ -48,9 +48,9 @@ public class QuotaCrossUtils {
 		return result;
 	}
 
-	public String getKdjCross(List<KdjBean> kdjBeanList, List<Candlestick> candlestickList){
+	public String getKdjCross(List<KdjBean> kdjBeanList, int len){
 		String result = "1";//空仓等待';
-		int len = candlestickList.size(); //K线周期长度
+//		int len = candlestickList.size(); //K线周期长度
 		KdjBean last = kdjBeanList.get(len - 1);
 		KdjBean second  = kdjBeanList.get(len - 2);
 

@@ -1,4 +1,6 @@
 
+#server:
+#  port: 80
 server:
   port: 443
   http:
@@ -9,7 +11,6 @@ server:
     key-store-password: q8iqstjqf4
     keyStoreType: JKS
     keyAlias: www.natiac.cn
-
 spring:
   application:
     name: admin-managee
@@ -44,11 +45,17 @@ spring:
     test: 0/2 * * * * ?
     test2: 0/3 * * * * ?
     binance:
-      price: 0 0/1 * * * ?
+      price: 0 0/2 * * * ?
       macd:
-        1h: 0 0/3 * * * ?
-        4h: 0 0/5 * * * ?
-        1d: 0 0/15 * * * ?
+        1h: 0 0/5 * * * ?
+        4h: 0 0/7 * * * ?
+        1d: 0 0/13 * * * ?
+    bittrex:
+      price: 0 0/3 * * * ?
+      macd:
+        1h: 0 0/6 * * * ?
+        4h: 0 0/9 * * * ?
+        1d: 0 0/17 * * * ?
 
 #日志
 logging:
@@ -60,10 +67,11 @@ debug: true
 self:
   exchange:
     binance: binance
+    bittrex: bittrex
   type:
     new: NEW
     macd: MACD
     kdj: KDJ
-  sckey: SCU20744Tcae3e700d2845416dcf4b7d48fefd4fc5a68472d8b5e0
+#  sckey: SCU20744Tcae3e700d2845416dcf4b7d48fefd4fc5a68472d8b5e0
 #  sckey: SCU20845T1c32631f004c33e9aa9333b68b2895065a6aa16731cfa
 

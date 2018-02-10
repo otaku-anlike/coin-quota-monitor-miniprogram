@@ -16,6 +16,20 @@ public interface CurrentPriceServer {
 	 * @since 2016年9月21日20:58:17
 	 * @return 是否添加成功
 	 */
-	public boolean binancePrice();
+	public boolean binancePrice(String exchange);
+
+	/**
+	 * 更新bittrex的实时价格
+	 * @since 2016年9月21日20:58:17
+	 * @return 是否添加成功
+	 */
+	public boolean bittrexPrice(String exchange);
+
+	/**
+	 * 更新火币pro的实时价格
+	 * @since 2016年9月21日20:58:17
+	 * @return 是否添加成功
+	 */
+	public boolean huobiPrice(String exchange);
 
 }

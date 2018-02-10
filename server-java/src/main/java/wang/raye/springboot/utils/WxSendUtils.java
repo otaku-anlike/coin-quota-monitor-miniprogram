@@ -40,7 +40,7 @@ public class WxSendUtils {
 
         String url = "https://sc.ftqq.com/"+sendBean.getSckey()+".send";
         String text=sendBean.getExchange()+"上新币["+sendBean.getSymbol()+"]";
-        String desp="新币["+sendBean.getSymbol()+"]目前价格:"+sendBean.getPrice()+ "\\n";
+        String desp="新币["+sendBean.getSymbol()+"]目前价格:"+sendBean.getPrice()+ "\n";
         desp=desp+DateUtils.getToday();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();

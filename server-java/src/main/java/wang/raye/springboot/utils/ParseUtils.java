@@ -1,5 +1,7 @@
 package wang.raye.springboot.utils;
 
+import com.binance.api.client.domain.market.Candlestick;
+import de.elbatya.cryptocoins.bittrexclient.api.model.publicapi.Candle;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -7,8 +9,10 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @Component
@@ -74,6 +78,32 @@ public final class ParseUtils {
      */
     public static String decimalFormat(double value, String pattern) {
         return  new DecimalFormat(pattern).format(new BigDecimal(value+""));
+    }
+
+    /**
+     *
+     * @param list
+     * @return
+     */
+    public static List<Candlestick> parseCandlestick(List<Candle> list) {
+        List<Candlestick> candlestickList = new ArrayList<>();
+        for (Candle candle : list){
+            Candlestick candlestick = new Candlestick();
+            candlestick.setOpenTime(candle.getT().toLocalTime().toNanoOfDay());
+            candlestick.setOpen(String.valueOf(candle.getO()));
+            candlestick.setHigh(String.valueOf(candle.getH()));
+            candlestick.setLow(String.valueOf(candle.getL()));
+            candlestick.setClose(String.valueOf(candle.getC()));
+            candlestick.setVolume(String.valueOf(candle.getV()));
+            candlestick.setCloseTime(candle.getT().toLocalTime().toNanoOfDay());
+//            private String quoteAssetVolume;
+//            private Long numberOfTrades;
+            candlestick.setTakerBuyBaseAssetVolume(String.valueOf(candle.getBV()));
+//            private String takerBuyQuoteAssetVolume;
+
+            candlestickList.add(candlestick);
+        }
+        return candlestickList;
     }
 
 

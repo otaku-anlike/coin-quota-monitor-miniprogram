@@ -5,6 +5,12 @@ import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
 import com.binance.api.client.domain.market.TickerPrice;
+import de.elbatya.cryptocoins.bittrexclient.BittrexClient;
+import de.elbatya.cryptocoins.bittrexclient.BittrexClient2;
+import de.elbatya.cryptocoins.bittrexclient.api.model.common.ApiResult;
+import de.elbatya.cryptocoins.bittrexclient.api.model.publicapi.BittrexInterval;
+import de.elbatya.cryptocoins.bittrexclient.api.model.publicapi.Candle;
+import de.elbatya.cryptocoins.bittrexclient.api.model.publicapi.MarketSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +58,6 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 	@Autowired
 	private QuotaCrossUtils quotaCrossUtils;
 
-	@Value("${self.exchange.binance}")
-	private String BINANCE;
 	@Value("${self.type.macd}")
 	private String MACD;
 	@Value("${self.type.kdj}")
@@ -62,13 +66,13 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 //	private String SCKEY;
 
 	@Override
-	public boolean binanceMacdCross(CandlestickInterval periods) {
+	public boolean binanceMacdCross(String exchange, CandlestickInterval periods) {
 		BinanceApiClientFactory factory = BinanceApiClientFactory.newInstance("API-KEY", "SECRET");
 		BinanceApiRestClient client = factory.newRestClient();
 
 		SymbolsCriteria cond = new SymbolsCriteria();
 		SymbolsCriteria.Criteria criteria = cond.createCriteria();
-		criteria.andExchangeEqualTo(BINANCE);
+		criteria.andExchangeEqualTo(exchange);
 		List<Symbols> symbolsList = symbolsMapper.selectByExample(cond);
 		for (Symbols symbols:symbolsList) {
 			//币种名
@@ -78,14 +82,48 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 			//调api获取k线
 			List<Candlestick> candlestickList = client.getCandlestickBars(symbols.getSymbol(), periods);
 
-//			log.info(symbols + "->"+ period + "->k线数组的长度:" + candlestickList.size());
-			List<Double> priceHighList = new ArrayList<>();
-			List<Double> priceLowList = new ArrayList<>();
+			this.getCandlestickList(candlestickList,exchange, symbol, period);
+
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean bittrexMacdCross(String exchange, BittrexInterval periods) {
+		// Create a BittrexClient
+		BittrexClient2 bittrexClient2 = new BittrexClient2();
+
+		SymbolsCriteria cond = new SymbolsCriteria();
+		SymbolsCriteria.Criteria criteria = cond.createCriteria();
+		criteria.andExchangeEqualTo(exchange);
+		List<Symbols> symbolsList = symbolsMapper.selectByExample(cond);
+		for (Symbols symbols:symbolsList) {
+			//币种名
+			String symbol = symbols.getSymbol();
+			// k线周期
+			String period = periods.getIntervalId();
+			//调api获取k线
+			List<Candle> candleList = bittrexClient2.getPublicApi2().getCandles(symbols.getSymbol(),period).unwrap();
+			//
+			List<Candlestick> candlestickList = ParseUtils.parseCandlestick(candleList);
+
+			this.getCandlestickList(candlestickList,exchange, symbol, period);
+
+		}
+
+		return true;
+	}
+
+	private void getCandlestickList(List<Candlestick> candlestickList,String exchange, String symbol, String period) {
+		//			log.info(symbols + "->"+ period + "->k线数组的长度:" + candlestickList.size());
+		List<Double> priceHighList = new ArrayList<>();
+		List<Double> priceLowList = new ArrayList<>();
 //			double maxPriceTmp = Double.valueOf(candlestickList.get(0).getHigh());
 //			double minPriceTmp = Double.valueOf(candlestickList.get(0).getLow());
-			for (Candlestick candlestick: candlestickList) {
-				priceHighList.add(Double.valueOf(candlestick.getHigh()));
-				priceLowList.add(Double.valueOf(candlestick.getLow()));
+		for (Candlestick candlestick: candlestickList) {
+			priceHighList.add(Double.valueOf(candlestick.getHigh()));
+			priceLowList.add(Double.valueOf(candlestick.getLow()));
 
 //				if (Double.valueOf(candlestick.getHigh()) > maxPriceTmp) {
 //					maxPriceTmp = Double.valueOf(candlestick.getHigh());
@@ -93,38 +131,35 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 //				if (Double.valueOf(candlestick.getLow()) < minPriceTmp) {
 //					minPriceTmp = Double.valueOf(candlestick.getLow());
 //				}
-			}
-			double maxPrice = Collections.max(priceHighList);
-			double minPrice =Collections.min(priceLowList);
+		}
+		double maxPrice = Collections.max(priceHighList);
+		double minPrice =Collections.min(priceLowList);
 //			log.info(symbol + "->"+ period + "->最高:" + maxPrice +"->最低:" +minPrice);
 //			log.info(symbol + "->"+ period + "->自算最高:" + maxPriceTmp +"->自算最低:" +minPriceTmp);
-			// 收盘价
-			double close = Double.valueOf(candlestickList.get(candlestickList.size()-1).getClose());
-			Candlestick lastCandle = candlestickList.get(candlestickList.size()-1);
+		// 收盘价
+		double close = Double.valueOf(candlestickList.get(candlestickList.size()-1).getClose());
+		Candlestick lastCandle = candlestickList.get(candlestickList.size()-1);
 
-			//MACD
-			List<MacdBean> macdBeanList =  quotaUtils.getMACD(12,26,9,candlestickList);
-			String statusMacd = quotaCrossUtils.getMACDCross(macdBeanList, candlestickList);
-			MacdBean lastMacdBean = macdBeanList.get(macdBeanList.size() - 1);
-			// 保存MACD数据
-			this.saveCross(BINANCE, symbol, period, MACD, statusMacd, lastCandle,lastMacdBean.getDif(),lastMacdBean.getDea(),lastMacdBean.getBar(), maxPrice, minPrice);
+		//MACD
+		List<MacdBean> macdBeanList =  quotaUtils.getMACD(12,26,9,candlestickList);
+		String statusMacd = quotaCrossUtils.getMACDCross(macdBeanList, candlestickList.size());
+		MacdBean lastMacdBean = macdBeanList.get(macdBeanList.size() - 1);
+		// 保存MACD数据
+		this.saveCross(exchange, symbol, period, MACD, statusMacd, lastCandle,lastMacdBean.getDif(),lastMacdBean.getDea(),lastMacdBean.getBar(), maxPrice, minPrice);
 
-			//KDJ
-			List<KdjBean> kdjBeanList = quotaUtils.getKDJ(9,3,3,candlestickList);
-			String statusKdj = quotaCrossUtils.getKdjCross(kdjBeanList, candlestickList);
-			KdjBean lastKdjBean = kdjBeanList.get(kdjBeanList.size() - 1);
-			// 保存KDJ数据
-			this.saveCross(BINANCE, symbol, period, KDJ, statusKdj, lastCandle, lastKdjBean.getK(), lastKdjBean.getD(), lastKdjBean.getJ(), maxPrice, minPrice);
+		//KDJ
+		List<KdjBean> kdjBeanList = quotaUtils.getKDJ(9,3,3,candlestickList);
+		String statusKdj = quotaCrossUtils.getKdjCross(kdjBeanList, candlestickList.size());
+		KdjBean lastKdjBean = kdjBeanList.get(kdjBeanList.size() - 1);
+		// 保存KDJ数据
+		this.saveCross(exchange, symbol, period, KDJ, statusKdj, lastCandle, lastKdjBean.getK(), lastKdjBean.getD(), lastKdjBean.getJ(), maxPrice, minPrice);
 
-			try {
-				Thread.sleep(2000);
-			}
-			catch (InterruptedException e) {
-				log.error("线程异常终止...");
-			}
+		try {
+			Thread.sleep(2000);
 		}
-
-		return true;
+		catch (InterruptedException e) {
+			log.error("线程异常终止...");
+		}
 	}
 
 	/**
@@ -189,7 +224,7 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 				}
 				if (isNeedSend) {
 					// 只发生BTC交易对的交叉提醒
-					if (symbol.indexOf("BTC") > 0) {
+					if (symbol.contains("BTC")) {
 						List<AlertUser> alertUsers= this.getAlertUsers();
 						// 算出裴波那契回调数据
 						List<PositionBean> fibonacciList = PostionUtils.getFibonacciRetrace(maxPrice, minPrice);
