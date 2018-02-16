@@ -1,7 +1,9 @@
 package wang.raye.springboot.utils;
 
 import com.binance.api.client.domain.market.Candlestick;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import wang.raye.springboot.bean.DojiBean;
 import wang.raye.springboot.bean.KdjBean;
 import wang.raye.springboot.bean.MacdBean;
 
@@ -16,6 +18,13 @@ import java.util.List;
 
 @Component
 public class QuotaCrossUtils {
+
+	@Value("${self.ratio.doji}")
+	private double DOJI;
+	@Value("${self.ratio.changes}")
+	private double CHANGE;
+	@Value("${self.ratio.volatile}")
+	private double Volatile;
 
 
 	public String getMACDCross(List<MacdBean> macdBeanList, int len){
@@ -78,6 +87,53 @@ public class QuotaCrossUtils {
 			//判断死叉条件：
 			//            return 2;//返回2 代表 死叉信号。
 			result = "6";//'超卖';
+		}
+		return result;
+	}
+
+	/**
+	 * 缩量十字星擒牛法
+	 * 五线上:=C>=MAX(MA(C,5),MAX(MA(C,10),MAX(MA(C,20),MAX(MA(C,60),MA(C,120)))));
+	 *
+	 * 缩量:=V<=HHV(V,10)*0.5;
+	 *
+	 * 十字星:=ABS(C-O)/C<=0.002 AND C/REF(C,1)<1.02;
+	 *
+	 * 五线上 AND 缩量 AND 十字星;
+	 * @param dojiBeanList
+	 * @param candlestickList
+	 * @return
+	 */
+	public String getDojiCross(List<DojiBean> dojiBeanList, List<Candlestick> candlestickList){
+		String result = "1";//空仓等待';
+		int len = candlestickList.size(); //K线周期长度
+		DojiBean last = dojiBeanList.get(len - 1);
+		DojiBean second  = dojiBeanList.get(len - 2);
+		Candlestick lastCandle = candlestickList.get(len - 1);
+		Candlestick secondCandle  = candlestickList.get(len - 2);
+
+		// C/REF(C,1)<1.02
+		double change = Double.valueOf(lastCandle.getClose())/Double.valueOf(secondCandle.getClose()) - 1;
+
+		// 缩量 AND 十字星
+		if (second.getDoji() <= DOJI && Double.valueOf(secondCandle.getVolume()) <= second.getHhv()) {
+			if(change >= CHANGE) {
+				result = "2";//'金叉';
+			} else if(change <= CHANGE * -1) {
+				result = "4";//'死叉';
+			}
+		}
+		return result;
+	}
+
+	public String getVolatile(double lastHigh, double lastLow, double secondClose) {
+		String result = "";
+		double difHigh = lastHigh/secondClose - 1;
+		double difLow = lastLow/secondClose - 1;
+		if (difHigh >= Volatile) {
+			result = "7";//暴涨
+		} else if (difLow <= Volatile * -1) {
+			result = "8";//暴跌
 		}
 		return result;
 	}

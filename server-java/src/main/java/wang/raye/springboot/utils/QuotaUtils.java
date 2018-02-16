@@ -3,6 +3,7 @@ package wang.raye.springboot.utils;
 import com.binance.api.client.domain.market.Candlestick;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import wang.raye.springboot.bean.DojiBean;
 import wang.raye.springboot.bean.KdjBean;
 import wang.raye.springboot.bean.MacdBean;
 import wang.raye.springboot.bean.RsiBean;
@@ -156,6 +157,31 @@ public class QuotaUtils {
 		return  resultList;
 	}
 
+	public List<DojiBean> getDoji(int n, int m1, int m2, List<Candlestick> list) {
+		List<DojiBean> resultList = new ArrayList<>();
+
+		if (list==null || list.size() < 1){
+			return null;
+		}
+		List<Double> maxs = HHV(list, n);
+		List<KdjBean> kdjList = this.getKDJ(n, m1, m2,list);
+		for (int i = 0; i < list.size(); i++) {
+			DojiBean dojiBean = new DojiBean();
+
+			double doji = Math.abs(Double.valueOf(list.get(i).getOpen())/Double.valueOf(list.get(i).getClose()) - 1);
+			dojiBean.setDoji(doji);
+
+			double hhv = maxs.get(i) * 0.5;
+			dojiBean.setHhv(hhv);
+
+			double j = kdjList.get(i).getJ();
+			dojiBean.setJ(j);
+
+			resultList.add(dojiBean);
+		}
+		return  resultList;
+	}
+
 	private double getLimitKdj(double value) {
 //		if (value > 100) {
 //			value = 100;
@@ -215,6 +241,43 @@ public class QuotaUtils {
 	}
 
 	/**
+	 * 算出ma的值 需要确保和传入的list size一致
+	 * @param list 数据集合
+	 * @param days 周期
+	 * @return   集合数据  MA=N日内的收盘价之和÷N
+	 */
+	public List<Double> countMA(List<Candlestick> list, int days) {
+		if (days < 1) {
+			return null;
+		}
+		if (list == null || list.size() == 0)
+			return null;
+		int cycle = days;
+
+		if (cycle > list.size()) {
+			//设置的指标参数大于数据集合 不用计算
+			return null;
+		}
+
+		double sum = 0;
+
+		List<Double> ma5Values = new ArrayList<Double>();
+
+		for (int i = cycle - 1; i < list.size(); i++) {
+			if (i == cycle - 1) {
+				for (int j = i - days + 1; j <= i; j++) {
+					sum += Double.valueOf(list.get(j).getClose());
+				}
+			} else {
+				sum = sum + Double.valueOf(list.get(i).getClose())
+						- Double.valueOf(list.get(i - days).getClose());
+			}
+			ma5Values.add(sum / days);
+		}
+		return ma5Values;
+	}
+
+	/**
 	 * LLV  n周期内的最低值 取low字段
 	 *
 	 * @param list 数据集合
@@ -253,13 +316,17 @@ public class QuotaUtils {
 			return null;
 		List<Double> datas = new ArrayList<>();
 
-		double maxValue = Double.valueOf(list.get(0).getHigh());
-		for (int i = n - 1; i < list.size(); i++) {
-			for (int j = i - n + 1; j <= i; j++) {
-				if (j == i - n + 1) {
-					maxValue = Double.valueOf(list.get(j).getHigh());
-				} else {
-					maxValue = Math.max(maxValue, Double.valueOf(list.get(j).getHigh()));
+		double maxValue = Double.valueOf(list.get(0).getVolume());
+		for (int i = 0; i < list.size(); i++) {
+			if (i < n - 1) {
+				maxValue = Double.valueOf(list.get(i).getVolume());
+			} else {
+				for (int j = i - n + 1; j <= i; j++) {
+					if (j == i - n + 1) {
+						maxValue = Double.valueOf(list.get(j).getVolume());
+					} else {
+						maxValue = Math.max(maxValue, Double.valueOf(list.get(j).getVolume()));
+					}
 				}
 			}
 			datas.add(maxValue);

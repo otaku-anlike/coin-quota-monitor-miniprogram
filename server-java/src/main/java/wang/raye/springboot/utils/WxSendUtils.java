@@ -58,7 +58,7 @@ public class WxSendUtils {
      */
     public void sendCross(WxSendBean sendBean){
         String url = "https://sc.ftqq.com/"+sendBean.getSckey()+".send";
-        String text= sendBean.getExchange()+"["+sendBean.getSymbol()+"]" +" ["+sendBean.getType()+"]";// + "📈";
+        String text= sendBean.getExchange()+"["+sendBean.getSymbol()+"]" +" ["+ParseUtils.parseCrossType(sendBean.getType())+"]";// + "📈";
         text = text+ "["+sendBean.getPeriod()+"]" +" ["+ParseUtils.parseCrossStatus(sendBean.getStatus())+"]";
 //        String desp=" ["+sendBean.getSymbol()+"]  ->  "+sendBean.getType()+"  ->  "+sendBean.getPeriod()+"  ->  "+"["+status+"]";
 //        desp=desp+"   <br />       <hr/>           ==========                   <br /> ";

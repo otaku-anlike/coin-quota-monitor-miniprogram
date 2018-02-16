@@ -42,8 +42,24 @@ public final class ParseUtils {
             status = "超买";
         } else if("6".equals(statusCode)) {
             status = "超卖";
+        } else if("7".equals(statusCode)) {
+            status = "暴涨";
+        } else if("8".equals(statusCode)) {
+            status = "暴跌";
         }
         return status;
+    }
+
+    public static String parseCrossType(String typeCode) {
+        String type = "";
+        if("MACD".equals(typeCode)) {
+            type = "MACD";
+        } else if("KDJ".equals(typeCode)) {
+            type = "KDJ";
+        } else if("DOJI".equals(typeCode)) {
+            type = "十字星";
+        }
+        return type;
     }
 
     /**

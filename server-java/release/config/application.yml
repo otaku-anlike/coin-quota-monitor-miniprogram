@@ -45,17 +45,21 @@ spring:
     test: 0/2 * * * * ?
     test2: 0/3 * * * * ?
     binance:
-      price: 0 0/2 * * * ?
+      price: 0 0/1 * * * ?
       macd:
-        1h: 0 0/5 * * * ?
-        4h: 0 0/7 * * * ?
-        1d: 0 0/13 * * * ?
+        1h: 0 0/3 * * * ?
+        4h: 0 0/5 * * * ?
+        1d: 0 0/10 * * * ?
+      change:
+        30m: 0 0/13 * * * ?
     bittrex:
-      price: 0 0/3 * * * ?
+      price: 0 0/1 * * * ?
       macd:
-        1h: 0 0/6 * * * ?
-        4h: 0 0/9 * * * ?
-        1d: 0 0/17 * * * ?
+        1h: 0 0/4 * * * ?
+        4h: 0 0/6 * * * ?
+        1d: 0 0/11 * * * ?
+      change:
+        1h: 0 0/27 * * * ?
 
 #日志
 logging:
@@ -68,10 +72,22 @@ self:
   exchange:
     binance: binance
     bittrex: bittrex
+  #交叉类型
   type:
     new: NEW
     macd: MACD
     kdj: KDJ
+    #十字星
+    doji: DOJI
+    #十字星
+    volatile: VOLATILE
+  #各种系数
+  ratio:
+    #十字星偏差系数值
+    doji: 0.0025
+    changes: 0.015
+    #波动幅度系数值
+    volatile: 0.08
 #  sckey: SCU20744Tcae3e700d2845416dcf4b7d48fefd4fc5a68472d8b5e0
 #  sckey: SCU20845T1c32631f004c33e9aa9333b68b2895065a6aa16731cfa
 
