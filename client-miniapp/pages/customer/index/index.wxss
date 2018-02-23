@@ -137,6 +137,7 @@ page .scroll-view-con {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding-left: 25rpx;
 }
 .scroll-item-content .content-center .shop-tag {
   display: flex;

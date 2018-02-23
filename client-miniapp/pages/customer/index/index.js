@@ -14,7 +14,7 @@ Page({
     scrollHeightMine:'600',
     scrollTop : 0,
     scrollTopMine:0,
-    refreshTop:50,
+    refreshTop:-0,//原来是50
     arrList:arrList,
     searchImgText:searchImgText,
     refresh:false,
@@ -23,10 +23,16 @@ Page({
     itemcon:'5公里',
     showChoiceList:false,
     concern:true,
+    exchange:'binance',
+    period: '1小时',
+    status: '金叉',
+    types: 'MACD',
     discount:false,
-    distence:false,
-    status:false,
+    distance:false,
+    //status:false,
     lastClickDisOrStatus:'',
+
+    
 
     //按分类搜索
     selectCategoryTitle:'果蔬花卉',
@@ -38,7 +44,7 @@ Page({
     // 公共
     tabbarAct:'shop',
     refreshText:'下拉刷新...',
-    searchHeight:'370',
+    searchHeight:'240',
     noticeHeight:65,
     hasMore:true,
     autoplay: true,
@@ -48,26 +54,26 @@ Page({
     tabbarHeight:100,
 
     array: [{
-      message: '500m',
+      content: '500m',
     }, {
-      message: '1000m'
+        content: '1000m'
     },
     {
-      message: '1公里'
+      content: '1公里'
     },
     {
-      message: '5公里'
+      content: '5公里'
     },
     {
-      message: '10公里',
+      content: '10公里',
     }, {
-      message: '15公里'
+      content: '15公里'
     },
     {
-      message: '20公里'
+      content: '20公里'
     },
     {
-      message: '25公里'
+      content: '25公里'
     }]
 
   },
@@ -140,11 +146,28 @@ Page({
   },
  //距离或会否开张选择
   tapSlideItem:function(e){
-      console.log(1,e.currentTarget.dataset.itemcon);
+    console.log(1, e.currentTarget.dataset.itemcon, e.currentTarget.dataset.itemtype);
+    var itemtype = e.currentTarget.dataset.itemtype;
+    var itemcon = e.currentTarget.dataset.itemcon;
+    if ('exchange' == itemtype) {
+      this.data.exchange = itemcon
+    } else if ('period' == itemtype) {
+      this.data.period = itemcon
+    } else if ('status' == itemtype) {
+      this.data.status = itemcon
+    } else if ('types' == itemtype) {
+      this.data.types = itemcon
+    } 
+    //concern: true,
       const content = e.currentTarget.dataset.itemcon;
       this.setData({
-          itemcon:content
+          itemcon:content,
+          exchange: this.data.exchange,
+          period: this.data.period,
+          status: this.data.status,
+          types: this.data.types,
       });
+      this.getApiData();
   },
   //
   checkChoiceList:function(){
@@ -180,68 +203,73 @@ Page({
         discount:!this.data.discount
       });
   },
+  searchByExchange: function () {
+
+    console.log(123, this.data.lastClickDisOrStatus)
+    if (this.data.lastClickDisOrStatus != '') {  //搜索列表已经打开
+      console.log(1234567)
+      if (this.data.lastClickDisOrStatus === 'exchange') {
+        this.closeChoiceList();
+        return;
+      }
+
+    } else {
+      this.checkChoiceList();
+    }
+    const array = [{
+      content: 'binance',
+    }, {
+      content: 'bittrex'
+    }]
+    this.setData({
+      array: array,
+      //exchange: true,
+      lastClickDisOrStatus: 'exchange'
+    });
+
+  },
   searchByDistance:function(){
       
       console.log(123,this.data.lastClickDisOrStatus)
       if (this.data.lastClickDisOrStatus!=''){  //搜索列表已经打开
           console.log(1234567)
-          if (this.data.lastClickDisOrStatus === 'dis'){
+          if (this.data.lastClickDisOrStatus === 'period'){
               this.closeChoiceList();
               return;
           }
-          const array = [{
-      message: '500m',
-    }, {
-      message: '1000m'
-    },
-    {
-      message: '1公里'
-    },
-    {
-      message: '5公里'
-    },
-    {
-      message: '10公里',
-    }, {
-      message: '15公里'
-    },
-    {
-      message: '20公里'
-    },
-    {
-      message: '25公里'
-    }]
-          this.setData({
-              array:array,
-              
-          });
+          
       } else {
           this.checkChoiceList();
       }
+      const array = [{
+        content: '1小时',
+      }, {
+        content: '4小时'
+      },
+      {
+        content: '1天'
+      }]
       this.setData({
-        distence:true,
-        lastClickDisOrStatus:'dis'
+        array: array,
+        distance:true,
+        lastClickDisOrStatus:'period'
       });
       
   },
   searchByStatus:function(){
-      if (this.data.lastClickDisOrStatus){  //搜索列表已经打开
+    if (this.data.lastClickDisOrStatus != '') {  //搜索列表已经打开
           if (this.data.lastClickDisOrStatus === 'status'){
               this.closeChoiceList();
               return;
           }
-          const array = [{content: '公里'},{content: '公里'},{content: '公里'},{content: '公里'}];
-          this.setData({
-              array:array,
-              status:!this.data.status
-              
-          });
       } else {
           this.checkChoiceList();
       }
+    const array = [{ content: '金叉' }, { content: '死叉' }, { content: '超买' }, { content: '超卖' }];
       this.setData({
-          status:true,
-          lastClickDisOrStatus:'status'
+        array: array,
+        //status: !this.data.status,
+        lastClickDisOrStatus:'status'
       });
   },
   //分类选择
@@ -249,26 +277,28 @@ Page({
       const title = e.currentTarget.dataset.title;
       console.log(11,title)
       this.setData({
-          selectCategoryTitle:title
+          selectCategoryTitle:title,
+          types: title
       });
+      this.getApiData();
   },
   
 
 
   merchantDetail:function(e){
     console.log(e)
-    wx.navigateTo({
-      url: '../detail/detail?id=' + e.currentTarget.dataset.id,
-      success: function(res){
-        // success
-      },
-      fail: function() {
-        // fail
-      },
-      complete: function() {
-        // complete
-      }
-    })
+    // wx.navigateTo({
+    //   url: '../detail/detail?id=' + e.currentTarget.dataset.id,
+    //   success: function(res){
+    //     // success
+    //   },
+    //   fail: function() {
+    //     // fail
+    //   },
+    //   complete: function() {
+    //     // complete
+    //   }
+    // })
   },
 
   // aboutUs:function(){
@@ -378,10 +408,10 @@ closeDiscountDetail:function(){
     wx.request({
       url: config.service.listUrl, //仅为示例，并非真实的接口地址
       data: {
-        exchange: 'binance',
-        type: 'MACD',
-        period: '1h',
-        status: ''
+        exchange: this.data.exchange,
+        type: utils.parseTypeCode(this.data.types),
+        period: utils.parsePeriodCode(this.data.exchange, this.data.period) ,
+        status: utils.parseStatusCode(this.data.status)
       },
       header: {
           'content-type': 'application/json'
@@ -389,11 +419,66 @@ closeDiscountDetail:function(){
       success: function(res) {
         console.log(res.data)
         res.data.forEach(function (item, index) {
+          item.type = utils.parseType(item.type)
           item.status = utils.parseStatus(item.status)
           item.time = utils.formatDateTime(item.time)
+          item.change = utils.convertChange(item.price, item.lastPrice)
+          item.changeStatus = true
+          if (item.change < 0){
+            item.changeStatus = false
+          }
         });
         _this.setData({
           arrList:res.data
+        })
+      }
+    })
+    wx.request({
+      url: config.service.symbolUrl, //仅为示例，并非真实的接口地址
+      data: {
+        exchange: this.data.exchange,
+        type: utils.parseTypeCode(this.data.types),
+        period: utils.parsePeriodCode(this.data.exchange, this.data.period),
+        // status: utils.parseStatusCode(this.data.status),
+        symbol: utils.parseSymbol(this.data.exchange,'USDT-BTC')
+      },
+      header: {
+        'content-type': 'application/json'
+      },
+      success: function (res) {
+        console.log(res.data)
+        var item = res.data
+          item.type = utils.parseType(item.type)
+          item.status = utils.parseStatus(item.status)
+          item.time = utils.formatDateTime(item.time)
+          item.lastTime = utils.formatDateTime(item.lastTime)
+          item.change = utils.convertChange(item.price, item.lastPrice)
+          item.changeStatus = true
+          if (item.change < 0) {
+            item.changeStatus = false
+          }
+  
+        _this.setData({
+          symbolBtc: res.data
+        })
+      }
+    })
+    wx.request({
+      url: config.service.noticeUrl, //仅为示例，并非真实的接口地址
+      data: {
+        exchange: this.data.exchange,
+        //type: utils.parseTypeCode(this.data.types),
+        //period: utils.parsePeriodCode(this.data.exchange, this.data.period),
+        //status: utils.parseStatusCode(this.data.status),
+        limitHour: 4
+      },
+      header: {
+        'content-type': 'application/json'
+      },
+      success: function (res) {
+        console.log(res.data)
+        _this.setData({
+          noticeList: res.data
         })
       }
     })

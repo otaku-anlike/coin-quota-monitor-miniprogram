@@ -52,8 +52,80 @@ function parseStatus(status) {
   return status
 }
 
+function parseStatusCode(status) {
+  if ("空仓" == status) {
+    status = "1"
+  } else if ("金叉" == status) {
+    status = "2"
+  } else if ("持有" == status) {
+    status = "3"
+  } else if ("死叉" == status) {
+    status = "4"
+  } else if ("超买" == status) {
+    status = "5"
+  } else if ("超卖" == status) {
+    status = "6"
+  }
+  return status
+}
+
+function parsePeriodCode(exchange, period) {
+  if ("binance" == exchange) {
+    if ("1小时" == period) {
+      period = "1h"
+    } else if ("4小时" == period) {
+      period = "4h"
+    } else if ("1天" == period) {
+      period = "1d"
+    }
+  } else if ("bittrex" == exchange) {
+    if ("1小时" == period) {
+      period = "hour"
+    } else if ("4小时" == period) {
+      period = "4hour"
+    } else if ("1天" == period) {
+      period = "day"
+    }
+  }
+  
+  return period
+}
+
+function parseTypeCode(type) {
+  if ("十字星" == type) {
+    type = "DOJI"
+  } 
+  return type
+}
+
+function parseType(type) {
+  if ("DOJI" == type) {
+    type = "十字星"
+  }
+  return type
+}
+
+function parseSymbol(exchange, symbol) {
+  if ("binance" == exchange) {
+    var symbols = symbol.split("-");
+    symbol = symbols[1] + symbols[0]
+  }
+  return symbol
+}
+
+function convertChange(crossPrice,lastPrice) {
+  return ((lastPrice / crossPrice - 1) * 100 ).toFixed(2)
+}
+
+
 module.exports = {
   formatTime: formatTime,
   formatDateTime,
-  parseStatus
+  parseStatus,
+  convertChange,
+  parseStatusCode,
+  parsePeriodCode,
+  parseType,
+  parseTypeCode,
+  parseSymbol
 }

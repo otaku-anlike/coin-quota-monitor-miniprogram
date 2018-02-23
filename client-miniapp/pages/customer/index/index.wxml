@@ -4,13 +4,13 @@
 <template is="msg" data="{{...__msg__}}"/>
 
 <view class="{{showChoiceList ? 'choice-list-mask zoomIn' : 'choice-list-mask zoomIn hide'}}" bindtap="closeChoiceList">
-  <scroll-view scroll-y="true" class="slide-wrap"> 
+  <scroll-view scroll-y="true" class="slide-wrap" > 
       <block wx:for="{{array}}" wx:key="unique">
-          <view wx:if="{{itemcon==item.message}}" bindtap="tapSlideItem" class="slide-item f2 c" data-itemcon="{{item.message}}">
-          {{item.message || item.content}}
+          <view wx:if="{{itemcon==item.content}}" bindtap="tapSlideItem" class="slide-item f2 c" data-itemcon="{{item.content}}" data-itemtype="{{lastClickDisOrStatus}}">
+          {{item.content}}
         </view>
-        <view wx:else bindtap="tapSlideItem" class="slide-item f2 c5" data-itemcon="{{item.message}}">
-          {{item.message || item.content}}
+        <view wx:else bindtap="tapSlideItem" class="slide-item f2 c5" data-itemcon="{{item.content}}" data-itemtype="{{lastClickDisOrStatus}}">
+          {{item.content}}
         </view>
       </block> 
   </scroll-view>
@@ -24,16 +24,20 @@
             <image  src="{{concern ? '/image/customer/index/1_start_h.png' : '/image/customer/index/1_start.png'}}"></image>
             <text class="f2 {{concern ?'c':'c5' }}">关注</text>
           </view>
-          <view class="search-header-item" bindtap="searchByDiscount" id="2">
+           <!-- <view class="search-header-item" bindtap="searchByDiscount" id="2">
             <image src="{{discount ?'/image/customer/index/2taohong.png':'/image/customer/index/2taohui.png'}}"></image>
             <text class="f2 {{discount ?'c':'c5' }}">优惠</text>
-          </view>
+          </view>  -->
+           <view class="search-header-item" bindtap="searchByExchange" id="2">
+            <text class="f2 {{exchange ?'c':'c5' }}">{{exchange}}</text>
+            <image class="search-header-img" src="{{exchange ? '/image/customer/index/3jianhong.png':'/image/customer/index/3jianhui.png' }}"></image>
+          </view> 
           <view class="search-header-item" bindtap="searchByDistance" id="3">
-            <text class="f2 {{distence ?'c':'c5' }}">800米</text>
-            <image class="search-header-img" src="{{distence ? '/image/customer/index/3jianhong.png':'/image/customer/index/3jianhui.png' }}"></image>
+            <text class="f2 {{distance ?'c':'c5' }}">{{period}}</text>
+            <image class="search-header-img" src="{{distance ? '/image/customer/index/3jianhong.png':'/image/customer/index/3jianhui.png' }}"></image>
           </view>
           <view class="search-header-item" bindtap="searchByStatus" id="4">
-          <text class="f2 {{status ?'c':'c5' }}">已开张</text>
+          <text class="f2 {{status ?'c':'c5' }}">{{status}}</text>
             <image class="search-header-img" src="{{status ? '/image/customer/index/3jianhong.png':'/image/customer/index/3jianhui.png'}}"></image>
           </view>
         </view>
@@ -44,14 +48,43 @@
             </view>
         </view>
     </view>
-    <view class="notice" style="height:{{noticeHeight}}rpx" hidden='true'>
+    <view class="notice" style="height:{{noticeHeight}}rpx">
       <image src="/image/common/icon_notice.png"></image>
       <swiper class="notice-slider" 
       autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
-        <swiper-item wx:for="{{imgUrls}}" wx:key="unique">
-          <text>公告内容内容内容内容内容内容内容内</text>
+        <swiper-item wx:for="{{noticeList}}" wx:key="unique">
+          <text>{{item}}</text>
         </swiper-item>
       </swiper>
+    </view>
+
+    <view class="container">
+    <view class="scroll-item-content" bindtap="merchantDetail" data-id="{{symbolBtc.id}}">
+            <view class="content-center">
+              <view class="shop-name">{{symbolBtc.symbol}}</view>
+              <view class="shop-tag">
+                <view class="tag exchange-tag">{{symbolBtc.exchange}}</view>
+                <view class="tag type-tag">{{symbolBtc.type}}</view>
+                <view class="tag period-tag">{{symbolBtc.period}}</view>
+                <view class="tag status-tag">{{symbolBtc.status}}</view>
+              </view>
+              <view class="shop-tag">
+                <view class="shop-introduce">最新价格:{{symbolBtc.lastPrice}}</view>
+                <view class="{{symbolBtc.changeStatus ? 'tag up-tag' : 'tag down-tag'}}"
+                >{{symbolBtc.change}}%</view>
+                
+              </view>
+              <view class="shop-tag">
+                <view class="shop-address">最新时间:{{symbolBtc.lastTime}}</view>
+              </view>
+            </view>
+            <view class="content-right">
+              <view class="distence">
+                  <text>{{symbolBtc.time}}</text>
+              </view>
+              <text>{{symbolBtc.price}}</text>
+            </view>
+          </view>
     </view>
 
     <view class="container">
@@ -68,8 +101,9 @@
                 <view class="tag status-tag">{{item.status}}</view>
               </view>
               <view class="shop-tag">
-                <view class="shop-introduce">交叉价格:{{item.price}}</view>
-                <view class="tag up-tag">{{item.type}}</view>
+                <view class="shop-introduce">最新价格:{{item.lastPrice}}</view>
+                <view class="{{item.changeStatus ? 'tag up-tag' : 'tag down-tag'}}"
+                >{{item.change}}%</view>
               </view>
               
               <!-- <view class="shop-address">商户地址地址地址地址地址地址地址地址</view> -->

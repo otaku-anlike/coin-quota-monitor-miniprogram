@@ -17,7 +17,11 @@ var config = {
     // 指标列表地址，用于获取币种的指标
     listUrl: `${host}/macd/list`,
     // 指标详情地址，用于获取币种的指标
-    detailUrl: `${host}/macd/detail`
+    detailUrl: `${host}/macd/detail`,
+    // 列表中单个币种的指标详情地址，用于获取币种的指标
+    symbolUrl: `${host}/macd/listbysymbol`,
+    // 获取公告地址，用于获取滚动的公告信息
+    noticeUrl: `${host}/macd/notice`
   }
 };
 

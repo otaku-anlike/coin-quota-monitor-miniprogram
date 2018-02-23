@@ -55,7 +55,7 @@
 		<!--<table tableName="macd_cross" >-->
 			<!--<property name="mergeable" value="true"></property>-->
 		<!--</table>-->
-		<table tableName="macd_cross_history"></table>
+		<!--<table tableName="macd_cross_history"></table>-->
 		<table tableName="schedule" ></table>
 		<table tableName="symbols" ></table>
 		<table tableName="alert" ></table>

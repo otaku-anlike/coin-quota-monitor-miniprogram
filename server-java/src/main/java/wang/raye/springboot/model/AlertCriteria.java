@@ -665,6 +665,76 @@ public class AlertCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andSendIsNull() {
+            addCriterion("send is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendIsNotNull() {
+            addCriterion("send is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendEqualTo(String value) {
+            addCriterion("send =", value, "send");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendNotEqualTo(String value) {
+            addCriterion("send <>", value, "send");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendGreaterThan(String value) {
+            addCriterion("send >", value, "send");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendGreaterThanOrEqualTo(String value) {
+            addCriterion("send >=", value, "send");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendLessThan(String value) {
+            addCriterion("send <", value, "send");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendLessThanOrEqualTo(String value) {
+            addCriterion("send <=", value, "send");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendLike(String value) {
+            addCriterion("send like", value, "send");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendNotLike(String value) {
+            addCriterion("send not like", value, "send");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendIn(List<String> values) {
+            addCriterion("send in", values, "send");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendNotIn(List<String> values) {
+            addCriterion("send not in", values, "send");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendBetween(String value1, String value2) {
+            addCriterion("send between", value1, value2, "send");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendNotBetween(String value1, String value2) {
+            addCriterion("send not between", value1, value2, "send");
+            return (Criteria) this;
+        }
+
         public Criteria andCountIsNull() {
             addCriterion("count is null");
             return (Criteria) this;

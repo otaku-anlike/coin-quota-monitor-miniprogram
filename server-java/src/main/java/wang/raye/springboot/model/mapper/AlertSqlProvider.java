@@ -74,6 +74,10 @@ public class AlertSqlProvider {
             sql.VALUES("period", "#{period,jdbcType=VARCHAR}");
         }
         
+        if (record.getSend() != null) {
+            sql.VALUES("send", "#{send,jdbcType=CHAR}");
+        }
+        
         if (record.getCount() != null) {
             sql.VALUES("count", "#{count,jdbcType=INTEGER}");
         }
@@ -104,6 +108,7 @@ public class AlertSqlProvider {
         sql.SELECT("status");
         sql.SELECT("price");
         sql.SELECT("period");
+        sql.SELECT("send");
         sql.SELECT("count");
         sql.SELECT("time");
         sql.FROM("alert");
@@ -157,6 +162,10 @@ public class AlertSqlProvider {
             sql.SET("period = #{record.period,jdbcType=VARCHAR}");
         }
         
+        if (record.getSend() != null) {
+            sql.SET("send = #{record.send,jdbcType=CHAR}");
+        }
+        
         if (record.getCount() != null) {
             sql.SET("count = #{record.count,jdbcType=INTEGER}");
         }
@@ -186,6 +195,7 @@ public class AlertSqlProvider {
         sql.SET("status = #{record.status,jdbcType=CHAR}");
         sql.SET("price = #{record.price,jdbcType=DOUBLE}");
         sql.SET("period = #{record.period,jdbcType=VARCHAR}");
+        sql.SET("send = #{record.send,jdbcType=CHAR}");
         sql.SET("count = #{record.count,jdbcType=INTEGER}");
         sql.SET("time = #{record.time,jdbcType=TIMESTAMP}");
         
@@ -226,6 +236,10 @@ public class AlertSqlProvider {
         
         if (record.getPeriod() != null) {
             sql.SET("period = #{period,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getSend() != null) {
+            sql.SET("send = #{send,jdbcType=CHAR}");
         }
         
         if (record.getCount() != null) {

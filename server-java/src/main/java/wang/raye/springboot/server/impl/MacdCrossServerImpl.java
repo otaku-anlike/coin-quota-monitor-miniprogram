@@ -65,8 +65,6 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 	private String KDJ;
 	@Value("${self.type.doji}")
 	private String DOJI;
-//	@Value("${self.sckey}")
-//	private String SCKEY;
 
 	@Override
 	public boolean binanceMacdCross(String exchange, CandlestickInterval periods) {
@@ -253,14 +251,19 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 			if ("1".equals(openflg)) {
 				List<Alert> alertExistList = this.getAlert(exchange, symbol, period, type);
 				boolean isNeedSend = false;
+				// 发送状态(默认0:未发送，1:已发送)
+				String send = "0";
+				if (symbol.contains("BTC")) {
+					send = "1";
+				}
 				if (alertExistList.size() > 0) {
 					Alert alert = alertExistList.get(0);
 					if (!status.equals(alert.getStatus())) {
-						this.modAlert(alertExistList, status, Double.valueOf(lastCandle.getClose()));
+						this.modAlert(alertExistList, status, Double.valueOf(lastCandle.getClose()), send);
 						isNeedSend = true;
 					}
 				} else {
-					this.addAlert(exchange, symbol, period, type, status, Double.valueOf(lastCandle.getClose()));
+					this.addAlert(exchange, symbol, period, type, status, Double.valueOf(lastCandle.getClose()), send);
 					isNeedSend = true;
 				}
 				if (isNeedSend) {
@@ -410,16 +413,17 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 		return alertSettingMapper.selectByExample(condAlert);
 	}
 
-	private void modAlert(List<Alert> list, String status, double close) {
+	private void modAlert(List<Alert> list, String status, double close, String send) {
 		Alert alert = list.get(0);
 		alert.setPrice(close);
 		alert.setTime(new Date());
 		alert.setStatus(status);
+		alert.setSend(send);
 		alert.setCount(alert.getCount() + 1);
 		alertMapper.updateByPrimaryKey(alert);
 	}
 
-	private void addAlert(String exchange, String symbol, String period, String type, String status, double close) {
+	private void addAlert(String exchange, String symbol, String period, String type, String status, double close, String send) {
 		Alert alert = new Alert();
 		alert.setExchange(exchange);
 		alert.setSymbol(symbol);
@@ -428,6 +432,7 @@ public class MacdCrossServerImpl implements MacdCrossServer{
 		alert.setStatus(status);
 		alert.setPrice(close);
 		alert.setTime(new Date());
+		alert.setSend(send);
 		alert.setCount(1);
 		alertMapper.insert(alert);
 	}

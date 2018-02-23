@@ -92,11 +92,15 @@ page {
 }
 .up-tag {
   background-color: #43CD80;
-  border-radius: 8rpx;
+  border-radius: 10rpx;
 }
 .down-tag {
   background-color: #c60e16;
-  border-radius: 8rpx;
+  border-radius: 10rpx;
+}
+.same-tag {
+  background-color: #b2b2b2;
+  border-radius: 10rpx;
 }
 /*无边框*/
 .border-none {

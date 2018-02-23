@@ -28,7 +28,8 @@ public class QuotaCrossUtils {
 
 
 	public String getMACDCross(List<MacdBean> macdBeanList, int len){
-		String result = "1";//空仓等待';
+//		String result = "1";//空仓等待';
+		String result = "4";//空仓等待'状态改为死叉;
 		// var macd = TA.MACD(records,12,26,9);//调用指标函数， 参数为MACD 默认的参数。
 		// var output = kline.chartMgr._indic._outputs;
 //		double dif = macdBean.dif; //dif线
@@ -52,13 +53,15 @@ public class QuotaCrossUtils {
 		} else if (last.getDif() > last.getDea() && second.getDif() > second.getDea()) {
 			//判断死叉条件：
 			//            return 2;//返回2 代表 死叉信号。
-			result = "3";//'继续持有';
+//			result = "3";//'继续持有';
+			result = "2";//'继续持有'状态改为金叉;
 		}
 		return result;
 	}
 
 	public String getKdjCross(List<KdjBean> kdjBeanList, int len){
-		String result = "1";//空仓等待';
+//		String result = "1";//空仓等待';
+		String result = "4";//空仓等待'状态改为死叉;
 //		int len = candlestickList.size(); //K线周期长度
 		KdjBean last = kdjBeanList.get(len - 1);
 		KdjBean second  = kdjBeanList.get(len - 2);
@@ -78,12 +81,13 @@ public class QuotaCrossUtils {
 				&& (last.getJ() > last.getD() && second.getJ() > second.getD())) {
 			//判断死叉条件：
 			//            return 2;//返回2 代表 死叉信号。
-			result = "3";//'继续持有';
-		} else if (last.getJ() > 100) {
+//			result = "3";//'继续持有';
+			result = "2";//'继续持有'状态改为金叉;
+		} else if (last.getJ() > 96) {
 			//判断死叉条件：
 			//            return 2;//返回2 代表 死叉信号。
 			result = "5";//'超买';
-		} else if (last.getJ() < 0) {
+		} else if (last.getJ() < 4) {
 			//判断死叉条件：
 			//            return 2;//返回2 代表 死叉信号。
 			result = "6";//'超卖';
@@ -137,6 +141,13 @@ public class QuotaCrossUtils {
 		}
 		return result;
 	}
+
+	//箱顶:=PEAK(CLOSE,13,1)*0.98 ;
+	//箱底:=TROUGH(CLOSE,8,1)*1.02;
+	//AA:=CROSS(REF(C,1),箱顶);
+	//BB:=CROSS(OPEN,箱顶);
+	//DD:=C>O;
+	//突破:AA AND BB AND DD;
 
 
 }
